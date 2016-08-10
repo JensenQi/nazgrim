@@ -1,0 +1,158 @@
+% !Mode:: "TeX:UTF-8" 
+\setlength{\subfigbottomskip}{0pt}
+\CTEXoptions[bibname={主要参考文献}]
+\CTEXsetup[name={,},number={}]{chapter}
+\captionsetup{labelsep=space,font=small,justification=centering}
+\arraycolsep=1.7pt
+\graphicspath{{figures/}}
+\renewcommand{\subcapsize}{\zihao{5}}
+\renewcommand{\thesubfigure}{\alph{subfigure})}
+\setcounter{secnumdepth}{4}
+\newcommand{\pozhehao}{\raisebox{0.1em}{------}}
+\titleformat{\chapter}{\center\zihao{-2}\heiti}{\chaptertitlename}{0.5em}{}
+\titlespacing{\chapter}{0pt}{-4.5mm}{8mm}
+\titleformat{\section}{\zihao{-3}\heiti}{\thesection}{0.5em}{}
+\titlespacing{\section}{0pt}{4.5mm}{4.5mm}
+\titleformat{\subsection}{\zihao{4}\heiti}{\thesubsection}{0.5em}{}
+\titlespacing{\subsection}{0pt}{4mm}{4mm}
+\titleformat{\subsubsection}{\zihao{-4}\heiti}{\thesubsubsection}{0.5em}{}
+\titlespacing{\subsubsection}{0pt}{0pt}{0pt}
+\makeatletter
+\renewcommand\thesection{\@arabic \c@section} % 前面不带 thechapter
+\makeatother
+
+\theoremstyle{plain}
+\theorembodyfont{\songti\rmfamily}
+\theoremheaderfont{\heiti\rmfamily}
+\newtheorem{definition}{\heiti 定义}
+\newtheorem{example}{\heiti 例}
+\newtheorem{algo}{\heiti 算法}
+\newtheorem{theorem}{\heiti 定理}
+\newtheorem{axiom}{\heiti 公理}
+\newtheorem{proposition}{\heiti 命题}
+\newtheorem{lemma}{\heiti 引理}
+\newtheorem{corollary}{\heiti 推论}
+\newtheorem{remark}{\heiti 注解}
+\newenvironment{proof}{\noindent{\heiti 证明：}}{\hfill $ \square $ \vskip 4mm}
+\theoremsymbol{$\square$}
+
+% 定义页眉和页脚 使用fancyhdr 宏包
+\newcommand{\makeheadrule}{
+\rule[7pt]{\textwidth}{0.75pt} \\[-23pt]
+\rule{\textwidth}{2.25pt}}
+\renewcommand{\headrule}{
+    {\if@fancyplain\let\headrulewidth\plainheadrulewidth\fi
+     \makeheadrule}}
+\makeatother
+		
+\pagestyle{fancyplain}
+\renewcommand{\chaptermark}[1]{\relax}
+\renewcommand{\sectionmark}[1]{\markright{#1}}
+\fancyhf{}
+\fancyhead[C]{\songti \zihao{-5}  哈尔滨工业大学本科毕业设计开题报告}
+\fancyfoot[C]{\zihao{-5} -~\thepage~-}
+\renewcommand\bibsection{\section*{\centerline{\bibname}}
+\markboth{ 哈尔滨工业大学本科毕业设计开题报告}{\bibname}}
+
+
+\renewcommand{\CJKglue}{\hskip 0.56pt plus 0.08\baselineskip} %加大字间距，使每行33个字
+\def\defaultfont{\renewcommand{\baselinestretch}{1.62}\normalsize\selectfont}
+% 调整罗列环境的布局
+\setitemize{leftmargin=3em,itemsep=0em,partopsep=0em,parsep=0em,topsep=-0em}
+\setenumerate{leftmargin=3em,itemsep=0em,partopsep=0em,parsep=0em,topsep=0em}
+\renewcommand{\theequation}{\arabic{equation}}
+\renewcommand{\thetable}{\arabic{table}}
+\renewcommand{\thefigure}{\arabic{figure}}
+
+\makeatletter
+\renewcommand{\p@subfigure}{\thefigure~}
+\makeatother
+
+\newcommand{\citeup}[1]{\textsuperscript{\cite{#1}}} % for WinEdt users
+
+% 封面、摘要、版权、致谢格式定义
+\makeatletter
+\def\title#1{\def\@title{#1}}\def\@title{}
+\def\titlesec#1{\def\@titlesec{& \rule[-4pt]{200pt}{1pt}\hspace{-326pt}\centerline{\textbf{#1}}}}\def\@titlesec{}
+\def\affil#1{\def\@affil{#1}}\def\@affil{}
+\def\subject#1{\def\@subject{#1}}\def\@subject{}
+\def\author#1{\def\@author{#1}}\def\@author{}
+\def\bdate#1{\def\@bdate{#1}}\def\@bdate{}
+\def\supervisor#1{\def\@supervisor{#1}}\def\@supervisor{}
+\def\date#1{\def\@date{#1}}\def\@date{}
+\def\stuno#1{\def\@stuno{#1}}\def\@stuno{}
+% %%%%%%%%%%%%%%%%%%%                定义封面                     %%%%%%%%%%%%%%%%%%%%%%%%%
+\def\makecover{
+    \thispagestyle{empty}
+    \zihao{-2}\vspace*{10mm}
+		\renewcommand{\CJKglue}{\hskip 2pt plus 0.08\baselineskip}  
+\begin{figure}[htbp]
+\centering
+\includegraphics[scale=0.16]{HIT.eps}
+\end{figure}		
+\vspace{10mm}
+\centerline{\zihao{-1}\songti\textbf{毕业设计（论文）开题报告}}
+\renewcommand{\CJKglue}{\hskip 0pt plus 0.08\baselineskip}
+\vspace{51.5pt}
+\zihao{-2}
+\begin{center}\songti\textbf{题~目：\@title}\end{center}
+\vspace{120pt}
+    \zihao{3}
+    \hspace*{68pt}{\songti
+	\renewcommand{\arraystretch}{1.8}
+    \begin{tabular}{l@{}l}
+    \textbf{专\hfill 业}     & \rule[-4pt]{200pt}{1pt}\hspace{-326pt}\centerline{\textbf\@subject}\\
+    \textbf{学\hfill 生}      & \rule[-4pt]{200pt}{1pt}\hspace{-326pt}\centerline{\textbf\@author}\\
+    \textbf{学\hfill 号}  & \rule[-4pt]{200pt}{1pt}\hspace{-326pt}\centerline{\textbf\@stuno}\\
+    \textbf{指\hfill 导\hfill 教\hfill 师}     & \rule[-4pt]{200pt}{1pt}\hspace{-326pt}\centerline{\textbf\@supervisor}\\
+    \textbf{日\hfill 期} & \rule[-4pt]{200pt}{1pt}\hspace{-326pt}\centerline{\textbf\@date}\\
+    \end{tabular}
+		\renewcommand{\arraystretch}{1}}
+	\vfill
+	\vfill
+    \centerline{\songti\textbf{\lishu \zihao{-2}哈尔滨工业大学教务处制}}
+
+%%定义内封
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\thispagestyle{empty}
+\zihao{5}\vspace*{2em}
+\begin{center}
+  \heiti\zihao{3}说\hspace{3em}明
+\end{center}
+\vspace*{40pt}
+	\renewcommand{\arraystretch}{1.25}
+    {\heiti\zihao{4}
+    \hangindent=2em
+	\noindent {\zihao{-3}\textbf{ 一、开题报告主要内容}}
+    \begin{enumerate}[leftmargin=36pt]
+	\item 课题来源及研究的目的和意义\\ {\songti \zihao{-4}（正文  宋体小4号字，行距1.25倍，段前0行，段后0行）}
+	\item 国内外在该方向的研究现状及分析
+	\item 主要研究内容
+	\item 研究方案
+	\item 进度安排，预期达到的目标
+	\item 课题已具备和所需的条件、经费
+	\item 研究过程中可能遇到的困难和问题，解决的措施
+	\item 主要参考文献
+    \end{enumerate}
+    \noindent  {\zihao{-3} \textbf{  二、对开题报告的要求}}
+	\begin{enumerate}[leftmargin=36pt]
+	\item 开题报告的字数应在3000字以上。
+	\item 参考文献的要求：		
+ \end{enumerate}  
+\begin{enumerate}
+\renewcommand{\labelenumi}{(\theenumi)} 
+\songti \zihao{-4}
+\item 理工类论文的参考文献一般为10-15篇，其中学术期刊类文献不少于7篇，外文文献不少于3篇（特殊专业可酌情确定明确要求，并报教务处备案）；文科、管理类论文，参考文献一般为15-20篇，其中学术期刊类文献不少于12篇，外文文献不少于3篇。近五年的文献数不应少于总数的1/3，应有近两年的参考文献。教材、产品说明书、国家标准、未公开发表的研究报告不宜作为参考资料。
+\item 参考文献按在开题报告中出现的次序列出。
+\item 参考文献书写顺序：序号 作者.文章名.学术刊物名.年，卷（期）：引用起止页。
+ \end{enumerate}  
+}  
+      
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\renewcommand{\arraystretch}{1}
+    \clearpage
+}
+
+\makeatother

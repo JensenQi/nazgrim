@@ -1,0 +1,869 @@
+% -*-coding: utf-8 -*-
+
+\defaultfont
+\appendix
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\BiAppChapter{深度置信网络源代码}{Full Appendix}%
+本附录中我们提供深度置信网络在MNIST中的实现源代码。在这个实验中，我们使用Gnumpy库为程序加速，使得原本需要执行大约需要一个月的训练只需要在1天之内完成。出于页面限制，我们对代码进行了一些格式调整，这使得代码格式看起来并不规范。此外，为了页面简洁，我们删除了一部分无用代码，由于在我写下这些代码的时候，只有我和上帝知道这些代码究竟干了什么而现在只剩下上帝知道了，所以我不确定是否删掉了一些看起来无用但有用的代码。因此这些代码不一定能执行成功，但是读者可按照这些代码的大体思路自行根据自身的语言背景重新实现一遍。
+
+这几个文件中，Main.py是整个程序的主入口。MNIST.py是一个工具文件，主要提供获取数据集以及绘制图像功能，需要注意的是，对于MNIST，我们已经将数据的前几个字节中的魔数去掉了，所以如果你的数据是直接从MNIST官网上获取的话，在读取数据的时候需要跳过几个字节，具体的参考官方文档。RBM.py是受限玻尔兹曼机的类文件。softmax.py是softmax分类器的类，它继承于RBM这个类，并且对training()方法进行重写，从而实现多态性。DBNs.py是深度置信网络的类文件，它由多个RBM与一个softmax组成，可对其执行分层的预训练与全局的权值微调。
+
+\begin{lstlisting}[language=Python,numbers=left, frame=shadowbox, rulesepcolor=\color{cadegrey}, caption=\text{Main.py}]
+from numpy import *
+from DBNs import *
+import numpy as np
+
+nodeNum = [784, 621, 982, 600, 410, 569, 10]
+dbn = DBNs(nodeNum)
+#dbn = DBNs(nodeNum, loadParameter=True)
+dbn.preTraining()
+#dbn.reconstruct()
+dbn.recognize()
+\end{lstlisting}
+
+\newpage
+
+\begin{lstlisting}[language=Python,numbers=left, frame=shadowbox, rulesepcolor=\color{cadegrey}, caption=\text{MNIST.py}]
+from struct import * 
+from numpy import *
+from scipy import misc
+import Image
+
+def getData():
+    trainingFile = open(r'trainingData','rb')
+    trainingData = fromfile(trainingFile, dtype = uint8)
+                   .reshape(-1, 784)
+    trainingFile.close()
+    
+    trainingLabelFile = open(r'trainingLabel','rb')
+    trainingLabel = fromfile(trainingLabelFile,dtype=uint8)
+    trainingLabelFile.close()
+    
+    testImageFile = open(r'testData','rb')
+    testData = fromfile(testImageFile, dtype = uint8)
+               .reshape(-1, 784)
+    testImageFile.close()
+
+    testLabelFile = open(r'testLabel','rb')
+    testLabel = fromfile(testLabelFile, dtype = uint8)
+    testLabelFile.close()   
+    return trainingData, trainingLabel, testData, testLabel
+
+def createBinData(trainingData, trainingLabel,
+                  testData, testLabel):
+    trainingData = (255 - trainingData) /255.0
+    scale = random.random(trainingData.shape)
+    trainingData[greater(trainingData, scale)] = 1
+    trainingData[less_equal(trainingData, scale)] = 0
+    trainingData = uint8(trainingData)
+    fp = open(r'binTrainingData0', 'wb')
+    fp.write(trainingData)
+    fp.close()
+
+    testData = (255 - testData) /255.0
+    scale = random.random(testData.shape)
+    testData[greater(testData, scale)] = 1
+    testData[less_equal(testData, scale)] = 0
+    testData = uint8(testData)
+    fp = open(r'binTestData', 'wb')
+    fp.write(testData)
+    fp.close()
+
+def getBinData():
+    trainingImageFile = open(r'binTrainingData0','rb')
+    trainingData = fromfile(trainingImageFile,dtype=uint8)
+                   .reshape(-1, 784)
+    trainingImageFile.close()
+    
+    trainingLabelFile = open(r'trainingLabel','rb')
+    trainingLabel = fromfile(trainingLabelFile,dtype=uint8)
+    trainingLabelFile.close()
+    
+    testImageFile = open(r'binTestData','rb')
+    testData = fromfile(testImageFile, dtype = uint8)
+               .reshape(-1, 784)
+    testImageFile.close()
+
+    testLabelFile = open(r'testLabel','rb')
+    testLabel = fromfile(testLabelFile, dtype = uint8)
+    testLabelFile.close()    
+    return double(trainingData), trainingLabel, 
+           double(testData), testLabel    
+def loadTrainingData(layer, dimension):
+    fileName = 'binTrainingData' + str(layer)
+    fp = open(fileName, 'rb')
+    trainingData = fromfile(fp, dtype = uint8)
+                   .reshape(-1, dimension)
+    fp.close()
+    return trainingData
+    
+def createImage(data, imageName = 'temp', mode = 'jpg', 
+                trans = True, showNow = False):
+    if trans == True:
+        image =  255 - data
+    else:
+        image = data
+    image.shape = 28, 28
+    imageName = imageName + '.' + mode
+    misc.imsave(imageName, image)
+    if showNow == True:    
+        image = Image.open(imageName)
+        image.show()
+def createBinImage(data, imageName = 'temp', mode = 'jpg', 
+                   trans = False, showNow = False):
+    if trans == True:    
+        image =  float64(1 - data)  
+    else:
+        image = float64(data)
+    image.shape = 28, 28
+    imageName = imageName + '.' + mode
+    misc.imsave(imageName, image)    
+    if showNow == True:
+        image = Image.open(imageName)
+        image.show()
+\end{lstlisting}
+
+\newpage
+
+\begin{lstlisting}[language=Python,numbers=left, frame=shadowbox, rulesepcolor=\color{cadegrey}, caption=\text{RBM.py}]
+import numpy as np
+import gnumpy as GPU
+from scipy import stats
+import scipy.weave as weave
+from MNISTData import *
+
+class RBM:
+    def __init__(self, layer, visHid, k=1, 
+                 learningRate = 0.001, maxEpoch = 100, 
+                 loadParameter = False):
+        self.layer = layer
+        self.numVis = visHid[0]
+        self.numHid = visHid[1]
+        self.k = k
+        self.learningRate = learningRate
+        self.maxEpoch = maxEpoch
+        if loadParameter == False:
+            print "init", str(layer)+"th RBM's parameters"
+            Gaussian = stats.norm(0, 0.01)
+            self.W = np.array(Gaussian.rvs(
+                    (self.numHid, self.numVis)),np.float32)                
+            trainingData = loadTrainingData(self.layer, 
+                                            self.numVis)
+            p = np.mean(trainingData, axis = 0)
+            p = np.true_divide(p, subtract(1.0001, p))
+            self.visBais = np.log(p).reshape(self.numVis,1)        
+            self.hidBais = np.zeros((self.numHid,1),double)
+            self.featureExtract()
+        else:
+            print  "load",str(layer)+"th RBM's paremeters"
+            self.W, self.visBais, self.hidBais = 
+                                       self.loadParameter()                   
+    def training(self):
+        from gnumpy import logistic
+        def sampleHidGivenVis(weight,v_t,hidBais):
+            h = GPU.logistic(GPU.dot(weight,v_t) + hidBais)
+            hSample = h.rand() < h
+            return hSample
+        def sampleVisGivenHid(weight, h_t, visBais):
+            v = GPU.logistic(GPU.dot(weight.T,h_t)+visBais)
+            vSample = v.rand() < v
+            return vSample
+        
+        S = loadTrainingData(self.layer, self.numVis)
+        S = np.float32(S)
+        maxBatch = 100
+        S.shape = maxBatch, -1, self.numVis   
+        momentum = 0.9
+        eta = 0.001
+        
+        for epoch in range(self.maxEpoch):
+            weight = GPU.garray(self.W)
+            visBais = GPU.garray(self.visBais)
+            hidBais = GPU.garray(self.hidBais)
+            deltaWeight = GPU.zeros(weight.shape)
+            deltaVisBais = GPU.zeros(self.visBais.shape)
+            deltaHidBais = GPU.zeros(self.hidBais.shape)
+            for batch in range(maxBatch):
+                v_0 = GPU.garray(S[batch].T)
+                v_t = GPU.garray(S[batch].T)
+                for i in range(self.k):
+                   h_t=sampleHidGivenVis(weight,v_t,hidBais)
+                   v_t=sampleVisGivenHid(weight,h_t,visBais)
+                prob_0 = GPU.logistic(GPU.dot(weight, v_0) 
+                                      + hidBais)
+                prob_t = GPU.logistic(GPU.dot(weight, v_t) 
+                                      + hidBais)
+                deltaWeight = momentum*deltaWeight + eta 
+                              * (GPU.dot(prob_0, v_0.T) 
+                               - GPU.dot(prob_t, v_t.T))
+                deltaVisBais = momentum*deltaVisBais + eta
+                               * (v_0.sum(1) - v_t.sum(1))
+                                 .reshape(-1, 1)
+                deltaHidBais = momentum*deltaHidBais + eta
+                             *(prob_0.sum(1)-prob_t.sum(1))
+                             .reshape(-1, 1)
+                weight += deltaWeight / maxBatch
+                hidBais += deltaHidBais / maxBatch
+                visBais +=deltaVisBais / maxBatch
+            self.W = weight.as_numpy_array()
+            self.visBais = visBais.as_numpy_array()
+            self.hidBais = hidBais.as_numpy_array()
+            print epoch, 'epoch complete!'    
+        self.saveParameter()
+        print "training",str(self.layer)+"th","RBM complete"
+        self.featureExtract()
+        
+    def saveParameter(self):
+        fp = open(r'weight' + str(self.layer), 'wb')
+        fp.write(self.W)
+        fp.close()
+        fp = open(r'visBais' + str(self.layer), 'wb')
+        fp.write(self.visBais)
+        fp.close()
+        fp = open(r'hidBais' + str(self.layer), 'wb')
+        fp.write(self.hidBais)
+        fp.close()
+        print "layer",self.layer,"parameters had been save"    
+    def loadParameter(self):
+        fp = open(r'weight' + str(self.layer),'rb')
+        weight = fromfile(fp, dtype = double)
+                 .reshape(self.numHid, self.numVis)
+        fp.close()
+        fp = open(r'visBais' + str(self.layer),'rb')
+        visBais = fromfile(fp, dtype = double)
+                  .reshape(self.numVis, 1)
+        fp.close()
+        fp = open(r'hidBais' + str(self.layer),'rb')
+        hidBais = fromfile(fp, dtype = double)
+                  .reshape(self.numHid, 1)
+        fp.close()
+        return weight, visBais, hidBais
+
+    def featureExtract(self, lowFeature = None):
+        if lowFeature == None:
+            lowFeature =  loadTrainingData(self.layer, 
+                                           self.numVis)    
+            numCase = lowFeature.shape[0]
+            highFeature = zeros((numCase, self.numHid), 
+                                dtype = uint8)
+            for case in range(numCase):
+                prob = 1.0 / (1 + np.exp( 
+                       - np.dot(lowFeature[case],self.W.T)
+                       - self.hidBais.T))
+                scale = np.random.random(prob.shape) 
+                temp = zeros(prob.shape, dtype = np.uint8)
+                temp[less(scale, prob)] = 1
+                highFeature[case] = temp
+            
+            fileName = 'binTrainingData'+str(self.layer+1)
+            fp = open(fileName, 'wb')
+            fp.write(highFeature)
+            fp.close()
+            print "high feature had been extracted!"
+        else:
+            prob=1.0/(1+np.exp(-np.dot(lowFeature,self.W.T)
+                               - self.hidBais.T))
+            return prob
+    
+    def reconstruct(self, highFeature):
+        highFeature.shape = 1, -1
+        prob = 1.0/(1+np.exp(-np.dot(highFeature, self.W)
+                             - self.visBais.T))
+        return prob
+\end{lstlisting}
+
+
+
+
+\newpage
+
+
+
+
+\begin{lstlisting}[language=Python,numbers=left, frame=shadowbox, rulesepcolor=\color{cadegrey}, caption=\text{softmax.py}]
+from RBM import *
+from scipy.odr.odrpack import Output
+
+class softmax(RBM): 
+    def __init__(self, layer, visHid,
+                 learningRate = 0.001, maxEpoch = 5,
+                 loadParameter = False):
+        self.layer = layer
+        self.numVis = visHid[0]
+        self.numHid = visHid[1]
+        self.learningRate = learningRate
+        self.maxEpoch = maxEpoch
+        if loadParameter == False:
+            print "init", str(layer)+"th RBM's parameters"
+            Gaussian = stats.norm(0, 0.01)
+            self.W = np.array(Gaussian.rvs(
+                     (self.numHid, self.numVis)),double)                
+            trainingData = loadTrainingData(self.layer,
+                                            self.numVis)
+            p = np.mean(trainingData, axis = 0)
+            p = np.true_divide(p, subtract(1.0001, p))
+            self.visBais = np.log(p).reshape(self.numVis,1)        
+            self.hidBais = np.zeros((self.numHid,1),double)
+            self.saveParameter()
+        else:
+            print  "load", str(layer)+"th RBM's paremeters"
+            self.W, self.visBais, self.hidBais =
+                                      self.loadParameter()    
+    def training(self):
+        Gaussian = stats.norm(0, 0.001)    
+        trainingData = loadTrainingData(self.layer,
+                                        self.numVis)
+        trainingLabel = getBinData()[1]
+        numCase = trainingData.shape[0]
+        weight = np.array(Gaussian.rvs(size=(self.numHid, 
+                                           self.numVis+1)), 
+                          dtype = double)
+        for epoch in range(self.maxEpoch):        
+            for i in range(numCase):
+                sample = trainingData[i].reshape(-1, 1)
+                target = trainingLabel[i]
+                sample = vstack((1, sample))
+                targetOut = np.exp(dot(weight, sample))
+                            .reshape(-1)
+                Z = sum(targetOut)
+                targetOut = (targetOut / Z).reshape(-1, 1)
+                delta=-dot(targetOut,sample.reshape(1,-1))
+                delta[target] += sample.reshape(-1)
+                delta += 0.005 * weight
+                weight += 0.001 * delta
+                self.W = copy(weight[:, 1:]
+                              .reshape(self.W.shape))
+                self.hidBais = copy(weight[:, 0].reshape(
+                                       self.hidBais.shape))            
+            print epoch, "complete"
+        print "training",str(self.layer)+"th","RBM complete"
+        self.saveParameter()
+    
+    def featureExtract(self, lowFeature):       
+        prob=np.exp(dot(lowFeature,self.W.T)+self.hidBais.T)
+        Z = sum(prob)
+        prob = (prob / Z)
+        return prob
+\end{lstlisting}
+
+\newpage
+
+\begin{lstlisting}[language=Python,numbers=left, frame=shadowbox, rulesepcolor=\color{cadegrey}, caption=\text{DBNs.py}]
+from numpy import *
+from RBM import *
+from softmax import *
+from MNISTData import *
+
+class DBNs:
+    def __init__(self, nodeNum, loadParameter = False):
+        self.rbmPair = zip(nodeNum[:-1], nodeNum[1:])
+        rbmsNum = len(nodeNum) - 1
+        self.rbms = [None for i in range(rbmsNum)]
+        if loadParameter == True:
+            for i in range(rbmsNum):
+                if i != rbmsNum - 1:
+                    self.rbms[i] = RBM(i,self.rbmPair[i],
+                                      loadParameter = True)
+                else:
+                    self.rbms[i]=softmax(i,self.rbmPair[i], 
+                                      loadParameter = True)
+        else:
+            for i in range(rbmsNum):
+                if i != rbmsNum - 1:
+                    self.rbms[i] = RBM(i, self.rbmPair[i])
+                else:
+                    self.rbms[i]=softmax(i,self.rbmPair[i])
+        
+    def preTraining(self):
+        for rbm in self.rbms:
+            rbm.training()            
+        print "DBNs had pre-trained complete!"
+    
+    
+    
+    def fineTuning(self, maxEpoch = 10):
+        import gnumpy as GPU
+        def makeBatch(maxBatch = 100):
+            trainingData = (255-getData()[0]) / 255.0
+            trainingData = getBinData()[0]
+            trainingData=hstack(
+                         (ones((trainingData.shape[0], 1)), 
+                          trainingData))
+            label = getBinData()[1]
+            trainingLabel = np.zeros((numCase, 10))
+            trainingLabel[[i for i in range(numCase)],
+                          label] = 1
+            return trainingData.reshape(maxBatch, -1, 785), 
+                   trainingLabel.reshape(maxBatch, -1,10 ), 
+        
+        def getAbstract(weight, input):
+            prob = [input]
+            for W in weight[:-1]:
+                temp = GPU.dot(prob[-1], W.T).logistic()
+                temp = hstack((ones((temp.shape[0], 1)), 
+                               temp.as_numpy_array()))
+                prob.append(GPU.garray(temp))
+            output=GPU.exp(GPU.dot(prob[-1], weight[-1].T))
+            Z = GPU.sum(output, axis=1).reshape(-1, 1)
+            output = output / Z
+            prob.reverse()
+            return prob, output            
+        def weight2GPU():
+            weight = []
+            for rbm in self.rbms:
+               temp=GPU.garray(hstack((rbm.hidBais,rbm.W)))
+               weight.append(temp)
+            return weight     
+        print "start to fine tuning"
+        maxEpoch = 200
+        maxBatch = 300
+        trainingData, trainingLabel = makeBatch(maxBatch)
+        numCase = trainingData.shape[1]
+        weight = weight2GPU()
+        epsilon = 0.999
+        learningRate = 0.1
+        trainingData = GPU.garray(trainingData)
+        trainingLabel = GPU.garray(trainingLabel)
+        for epoch in range(maxEpoch):         
+            self.recognize()
+            for i in range(maxBatch):
+                input = trainingData[i]
+                target = trainingLabel[i]
+                prob, output = getAbstract(weight, input)
+                sens = target - output                
+                weight.reverse()
+                for W, X, index in zip(weight, prob, 
+                                       range(len(weight))):
+                    delta = GPU.dot(sens.T, X)
+                    sens = GPU.dot(sens, W) * X * (1 - X)
+                    sens = sens[:, 1:]
+                    weight[index] += learningRate * delta
+                                     /(numCase)                        
+                weight.reverse()                    
+            print epoch, "complete!"
+            for rbm, W in zip(self.rbms, weight):
+                rbm.W = (epsilon*W[:, 1:]).as_numpy_array()
+                rbm.hidBais = W[:, 0].as_numpy_array()                    
+        for rbm in (self.rbms):
+            rbm.saveParameter()
+    
+    def reconstruct(self, numCase=100, trainingData=None):
+        if trainingData == None:
+            trainingData = getBinData()[0]
+            pureRBM = self.rbms[:-1]
+            for i in range(numCase):
+                sample = trainingData[i]
+                abstract = sample
+                for rbm in pureRBM:
+                    abstract = rbm.featureExtract(abstract)
+                pureRBM.reverse()
+                for rbm in pureRBM:
+                    abstract = rbm.reconstruct(abstract)
+                pureRBM.reverse()
+                imageName = 'reconstruct' + str(i)
+                createImage(255 * abstract, imageName, 
+                            showNow = False, trans = False)
+        else:
+            pureRBM = self.rbms[:-1]
+            abstract = trainingData
+            for rbm in pureRBM:
+                abstract = rbm.featureExtract(abstract)
+            pureRBM.reverse()
+            for rbm in pureRBM:
+                abstract = rbm.reconstruct(abstract)
+            scale = np.random.random(abstract.shape)
+            temp = zeros(abstract.shape)
+            temp[less(scale, abstract)] = 1
+            createImage(255 * abstract, 
+                        showNow = False, trans = False)
+            return temp
+    
+    
+    
+    def recognize(self, testData = None, testLabel = None):
+        if testData == None or testLabel == None:
+            testData = (255-getData()[2])/255.0
+            #testData = getBinData()[2]
+            testLabel = getBinData()[3]
+            numCase = testData.shape[0]
+            maxBatch = 100
+            testData.shape = maxBatch, -1, 784
+            testLabel.shape = maxBatch, -1
+        else:
+            numCase = testData.shape[0] * testData.shape[1]
+            maxBatch = testData.shape[0] 
+            
+        count = 0
+        for i in range(maxBatch):
+            input = testData[i]
+            output = input
+            for rbm in self.rbms:
+                output = rbm.featureExtract(output)
+            guest = argmax(output, axis = 1)
+            bingo = guest == testLabel[i]
+            count += sum(bingo)
+        print "correct rate=",str(100.0*count/numCase)+"%"
+\end{lstlisting}
+
+\BiAppChapter{卷积神经网络源代码}{AppendixB}%
+在本附录中给出CIFAR中使用的卷积神经网络源代码，由于MNIST源代码与这里类似，只是构造器有略微的不同，因此我们不打算提供MNIST中卷积网络的代码，读者可经过很少的改动便可将以下的代码改写成训练MNIST数据集的代码。在这几个文件中，Main.py是整个程序的入口。CIFAR.py是工具文件，它提供获取数据集以及绘制图像的功能。FormatLayer.py是最顶层特征图展开成列向量所经过的一个格式转化层。CNNs.py是整个卷积网络的类文件，它能实现网络的前向传播和反向传播。SubsamplingLayer.py是采样层类文件。ConvLayer.py是卷积层类文件。FullConnectLayer.py是全连接层的类文件。可以看到，整个网络的代码已经被我们写成紧耦合的了，我们没有时间将这些代码写成松耦合形式，有兴趣的读者可进行尝试。另外，鉴于版面的问题，我们对代码的格式进行了调整，因此直接拷贝这些代码是不会执行的，你需要再重新调整他们的格式。我们对数据集进行了镜像处理，因此我们总共有10个批次的数据集，进行图像镜像仅仅只是将矩阵翻转，很容易实现，所以在这里我们就不贴代码了。
+
+\begin{lstlisting}[language=Python,numbers=left, frame=shadowbox, rulesepcolor=\color{cadegrey}, caption=\text{FormatLayer.py}]
+from CNNs import *
+cnn = CNNs(load=False)
+cnn.train()
+correctRate = cnn.testing()
+print correctRate
+\end{lstlisting}
+
+
+\newpage
+
+\begin{lstlisting}[language=Python,numbers=left, frame=shadowbox, rulesepcolor=\color{cadegrey}, caption=\text{CIFAR.py}]
+from numpy import *
+from scipy import misc
+import Image
+
+def unpickle(file):
+    import cPickle
+    fo = open(file, 'rb')
+    dict = cPickle.load(fo)
+    fo.close()
+    return dict['data'], array(dict['labels'])
+
+def getData(i):
+    fileName = 'data_batch_' + str(i)
+    trainingData, trainingLabel = unpickle(fileName)
+    return trainingData/255.0, trainingLabel
+
+def getTestData():
+    fileName = 'test_batch'
+    testData, testLabel = unpickle(fileName)
+    return testData/255.0, testLabel
+
+def createImage(data, imageName = 'temp', mode = 'jpg'):
+    red = data[:1024]
+    green = data[1024:2048]
+    blue = data[2048:]
+    image = array(zip(red, green, blue)).reshape(32,32,3)
+    imageName = imageName + '.' + mode
+    misc.imsave(imageName, image)    
+\end{lstlisting}
+
+
+
+\newpage
+
+\begin{lstlisting}[language=Python,numbers=left, frame=shadowbox, rulesepcolor=\color{cadegrey}, caption=\text{CNNs.py}]
+from ConvLayer import *
+from SubsamplingLayer import *
+from FullConnectLayer import *
+import numpy as np
+from CIFAR import *
+from FormatLayer import *
+
+class CNNs():
+    
+    def __init__(self, load=False):
+        self.CNN = [ConvLayer(1, 3, 9, loadParameter=load),
+                    SubsamplingLayer(2),  
+                    FormatLayer(6, 9, 14, 14),
+                    FullConnectLayer(7, 1764, 10, 
+                                     loadParameter=load)]
+    
+    def training(self):
+        for i in range(400):
+            self.trainAepoch()
+            correctRate = self.test()/100.0
+            print 'epoch', i, 'complete', 
+                  'correct rate =', correctRate
+            for layer in self.CNN:
+                layer.saveParameter()
+
+    
+    def trainAepoch(self):
+        error = 0
+        for batch in range(10):
+            numCase = 10000
+            trainingData = getData(batch + 1)[0][:numCase]
+            label = getData(batch + 1)[1][:numCase]
+            trainingLabel = np.zeros((numCase, 10))
+            trainingLabel[[i for i in range(numCase)], 
+                          label] = 1
+    
+            for i in range(numCase):
+                red = trainingData[i][:1024]
+                      .reshape(32, 32)
+                green = trainingData[i][1024:2048]
+                        .reshape(32, 32)
+                blue = trainingData[i][2048:]
+                       .reshape(32, 32)
+                featureMap = [red, green, blue]
+                temp = [featureMap]
+                #fprop
+                for layer in self.CNN:
+                    featureMap = layer.fprop(featureMap)
+                    temp.insert(0, featureMap)
+                # clac error
+                outIn = zip(temp[:-1], temp[1:])
+                guest = temp[0]
+                loseFuncDiffAct = guest 
+                          - trainingLabel[i].reshape(-1, 1)
+                error += np.dot(loseFuncDiffAct.T, 
+                                loseFuncDiffAct)
+                self.CNN.reverse()
+                # bprob
+                for layer, outIn in zip(self.CNN[:], 
+                                        outIn[:]):
+                    loseFuncDiffAct = layer.bprop(
+                                        loseFuncDiffAct, 
+                                        outIn[1], outIn[0])
+                self.CNN.reverse()
+        print 'a batch complete, error =', error
+    
+    
+    def testing(self):
+        testData = getTestData()[0]
+        testLabel = getTestData()[1]
+        numCase = 10000
+        hit = 0
+        for i in range(numCase):
+            red = testData[i][:1024].reshape(32, 32)
+            green = testData[i][1024:2048].reshape(32, 32)
+            blue = testData[i][2048:].reshape(32, 32)
+            feature = [red, green, blue]
+            for layer, layerIndex in zip(self.CNN, 
+                                     range(len(self.CNN))):
+                feature = layer.fprop(feature)
+            guest = np.argmax(feature)
+            label = testLabel[i]
+            if guest == label:
+                hit += 1
+        return hit
+\end{lstlisting}
+
+\newpage
+
+\begin{lstlisting}[language=Python,numbers=left, frame=shadowbox, rulesepcolor=\color{cadegrey}, caption=\text{ConvLayer.py}]
+import numpy as np
+from scipy.signal import convolve2d
+from scipy import stats
+
+
+class ConvLayer():
+    def __init__(self, layer, inputMapNum, outputMapNum, 
+                 kernelSize=(5, 5), loadParameter=False):
+       self.layer = layer
+       self.inputMapNum = inputMapNum
+       self.outputMapNum = outputMapNum
+       self.kernelSize = kernelSize
+       Gaussian = stats.norm(0, 0.0001)
+       self.kernel=[[None for j in range(self.outputMapNum)]
+                          for i in range(self.inputMapNum)]
+       if loadParameter == False:
+           self.kernel=[[np.array(Gaussian.rvs(kernelSize))
+                         for j in range(self.outputMapNum)]
+                         for i in range(self.inputMapNum)]
+           self.bias = np.array([np.random.random() 
+                        for i in range(self.outputMapNum)])
+        else:
+            for i in range(self.inputMapNum):
+                for j in range(self.outputMapNum):
+                    fp = open(r'kernel' + str(self.layer) 
+                           +'('+str(i)+','+str(j)+')','rb')
+                    self.kernel[i][j] = np.fromfile(fp, 
+                                        dtype=np.double)
+                                  .reshape(self.kernelSize)
+                    fp.close()
+            fp = open(r'bias' + str(self.layer), 'rb')
+            self.bias = np.fromfile(fp, dtype=np.double)
+            fp.close()
+            print "conv layer", self.layer, 
+                  "parameters had been loaded."
+        self.learningRate = 0.01
+
+    def saveParameter(self):
+        for i in range(self.inputMapNum):
+            for j in range(self.outputMapNum):
+                fp = open(r'kernel' + str(self.layer) 
+                          +'('+str(i)+','+str(j)+')','wb')
+                fp.write(self.kernel[i][j])
+                fp.close()
+        fp = open(r'bias' + str(self.layer), 'wb')
+        fp.write(np.array(self.bias))
+        fp.close()
+        print "conv layer", self.layer, 
+              "parameters had been save."
+
+    def conv(self, data, kernel):
+        featureMap = convolve2d(data, kernel, mode='valid')
+        return featureMap
+
+    def fprop(self, inputMaps):
+        highFeatureMaps = [np.zeros_like(
+                                    self.conv(inputMaps[0], 
+                                    self.kernel[0][0]))
+                         for i in range(self.outputMapNum)]
+
+        for inputMap, kernel_i in zip(inputMaps, self.kernel):
+           outputMaps = [self.conv(inputMap, kernel_j) 
+                          for kernel_j in kernel_i]
+
+           for i, outputMap in zip(range(self.outputMapNum),
+                                   outputMaps):
+                highFeatureMaps[i] += outputMap
+
+        for i in range(self.outputMapNum):
+            highFeatureMaps[i] = 1.0/(1 
+                               + np.exp(-highFeatureMaps[i]
+                               - self.bias[i]))
+        return highFeatureMaps
+
+    def bprop(self, lossDiffActMap, inputMap, outputMap):
+        def rot180(Matrix):
+            return np.rot90(Matrix, 2)
+
+        actDiffNetMap = [output * (1 - output) 
+                         for output in outputMap]
+
+        sensMap = [lossDiffAct * actDiffNet 
+                   for lossDiffAct, actDiffNet in 
+                   zip(lossDiffActMap, actDiffNetMap)]
+
+        deltaKernel=[[None for j in range(self.outputMapNum)]
+                       for i in range(self.inputMapNum)]
+
+        for i in range(self.inputMapNum):
+            for j in range(self.outputMapNum):
+                deltaKernel[i][j] = rot180(self.conv(
+                                    inputMap[i], 
+                                    rot180(sensMap[j])))
+                self.kernel[i][j] -= self.learningRate 
+                                     * deltaKernel[i][j]
+
+        for j in range(self.outputMapNum):
+            self.bias[j] -= self.learningRate 
+                            * np.sum(sensMap[j])
+
+        ans = [np.zeros_like(inputMap[0]) 
+               for i in range(self.inputMapNum)]
+        for i in range(self.inputMapNum):
+            for j in range(self.outputMapNum):
+                ans[i] += convolve2d(sensMap[j], 
+                                 rot180(self.kernel[i][j]),
+                                 mode='full')
+        return ans
+\end{lstlisting}
+
+\newpage
+
+\begin{lstlisting}[language=Python,numbers=left, frame=shadowbox, rulesepcolor=\color{cadegrey}, caption=\text{SubsamplingLayer.py}]
+import numpy as np
+from scipy.signal import convolve2d
+from scipy.linalg import kron
+
+class SubsamplingLayer():
+    
+    def __init__(self, layer):
+        self.layer = layer
+        self.kernel = 0.25 * np.ones((2, 2))
+    
+    def subsampling(self,data):
+        featureMap = convolve2d(data, self.kernel, 
+                                mode='valid')
+        return featureMap[::2, ::2]
+    
+    def saveParameter(self):
+        print 'subsamplint layer has no parameter to save'
+        
+    def fprop(self, lowFeatureMaps):
+        highFeatureMaps = [self.subsampling(data) 
+                           for data in lowFeatureMaps]
+        return highFeatureMaps
+    
+    def bprop(self, lossDiffActMap, inputMap, outputMap):
+        I2x2 = 0.25 * np.ones((2,2))
+        return [kron(sens,I2x2) for sens in lossDiffActMap]
+\end{lstlisting}
+
+\newpage
+
+\begin{lstlisting}[language=Python,numbers=left, frame=shadowbox, rulesepcolor=\color{cadegrey}, caption=\text{FormatLayer.py}]
+import numpy as np
+class FormatLayer():
+    def __init__(self, layer, mapNum, mapRow, mapCol):
+        self.mapNum = mapNum
+        self.mapRow = mapRow
+        self.mapCol = mapCol
+        self.layer = layer
+    
+    def fprop(self, data):
+        return np.array(data).reshape((-1, 1))
+    
+    def saveParameter(self):
+        print 'format layer has no parameter to save'
+    
+    def bprop(self, lossDiffAct, feedIn, output):
+        lossDiffAct.shape = self.mapNum, self.mapRow, 
+                            self.mapCol
+        return [maps for maps in lossDiffAct]
+\end{lstlisting}
+
+\newpage
+
+\begin{lstlisting}[language=Python,numbers=left, frame=shadowbox, rulesepcolor=\color{cadegrey}, caption=\text{FullConnectLayer.py}]
+from scipy import stats
+import numpy as np
+
+class FullConnectLayer():
+    
+    def __init__(self, layer, visNum, hidNum, 
+                 loadParameter = False):
+        self.layer = layer
+        Gaussian = stats.norm(0, 0.01)
+        if loadParameter == False:
+            self.weight = np.array(Gaussian.rvs(
+                                   (hidNum,visNum)))
+            self.bias = np.zeros((hidNum, 1))
+        else:
+            fp = open(r'weight' + str(self.layer),'rb')
+            self.weight = np.fromfile(fp,dtype = np.double)
+                                   .reshape(hidNum, visNum)
+            fp.close()
+            fp = open(r'bias' + str(self.layer),'rb')
+            self.bias = np.fromfile(fp, dtype = np.double)
+                                        .reshape(hidNum, 1)
+            fp.close()
+            print "full connect layer",self.layer,
+                  "parameters had been loaded."
+        self.learningRate = 0.001
+    
+    def saveParameter(self):
+        fp = open(r'weight' + str(self.layer), 'wb')
+        fp.write(self.weight)
+        fp.close()
+        fp = open(r'bias' + str(self.layer), 'wb')
+        fp.write(self.bias)
+        fp.close()
+        print "full connect layer", self.layer,
+              "parameters had been save."
+    
+    def fprop(self, data):
+        net = np.dot(self.weight, data) + self.bias
+        feature = 1.0/(1 + np.exp(-net))
+        return feature
+    
+    
+    def bprop(self, lossDiffAct, feedIn, output):
+        actDiffNet = output * (1 - output)
+        sens = lossDiffAct * actDiffNet
+        deltaWeight = np.dot(sens, feedIn.T) 
+        self.weight -= self.learningRate * deltaWeight
+        self.bias -= self.learningRate * sens
+        return np.dot(self.weight.T, sens)
+\end{lstlisting}
+
+
+
+

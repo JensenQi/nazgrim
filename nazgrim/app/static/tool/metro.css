@@ -1,0 +1,154 @@
+/*全局設定*/
+
+.metro {
+    color: #FFF;
+    position: absolute;
+    overflow: hidden;
+    box-shadow: 0 0 2px #555;
+}
+
+.metro:hover {
+    color: #FFF;
+}
+
+.metroFront {
+    display: table;
+    text-align: center;
+    position: absolute;
+    width: 101%;
+    height: 101%;
+}
+
+.metroFront > div {
+    display: table-cell;
+    vertical-align: middle;
+    font-size: xx-large;
+}
+
+.metroBack {
+    display: table;
+    position: absolute;
+    width: 101%;
+    height: 101%;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/*slide移動*/
+.slide > .metroFront {
+    transition: left 0.3s, top 0.3s, right 0.3s, bottom 0.3s;
+}
+
+.slide > .metroBack {
+    transition: left 0.3s, top 0.3s, right 0.3s, bottom 0.3s;
+}
+
+/*向左平移*/
+.slide.left > .metroFront {
+    left: 0;
+}
+
+.slide.left:hover > .metroFront {
+    left: 100%;
+}
+
+.slide.left > .metroBack {
+    left: -100%;
+}
+
+.slide.left:hover > .metroBack {
+    left: -0%;
+}
+
+/*向右平移*/
+.slide.right > .metroFront {
+    right: 0;
+}
+
+.slide.right:hover > .metroFront {
+    right: 100%;
+}
+
+.slide.right > .metroBack {
+    right: -100%;
+}
+
+.slide.right:hover > .metroBack {
+    right: -0%;
+}
+
+/*向上平移*/
+.slide.up > .metroFront {
+    top: 0;
+}
+
+.slide.up:hover > .metroFront {
+    top: 100%;
+}
+
+.slide.up > .metroBack {
+    top: -100%;
+}
+
+.slide.up:hover > .metroBack {
+    top: -0%;
+}
+
+/*向下平移*/
+.slide.down > .metroFront {
+    bottom: 0;
+}
+
+.slide.down:hover > .metroFront {
+    bottom: 100%;
+}
+
+.slide.down > .metroBack {
+    bottom: -100%;
+}
+
+.slide.down:hover > .metroBack {
+    bottom: -0%;
+}
+
+/*翻轉*/
+
+.flip > div {
+    transition: transform 0.5s;
+}
+
+.flip .metroBack {
+    color: white;
+    z-index: 0;
+    background: inherit;
+    backface-visibility: hidden;
+}
+
+/*水平翻轉*/
+
+.horizontal.flip:hover .metroFront {
+    transform: perspective(600px) rotateY(-179.9deg);
+}
+
+.horizontal.flip .metroBack {
+    transform: perspective(600px) rotateY(180deg);
+}
+
+.horizontal.flip:hover .metroBack {
+    transform: perspective(600px) rotateY(0deg);
+}
+
+/*垂直翻轉*/
+.vertical.flip:hover .metroFront {
+    transform: perspective(600px) rotateX(-179.9deg);
+}
+
+.vertical.flip .metroBack {
+    transform: perspective(600px) rotateX(180deg);
+}
+
+.vertical.flip:hover .metroBack {
+    transform: perspective(600px) rotateX(0deg);
+}
+
+

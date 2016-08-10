@@ -1,0 +1,70 @@
+body {
+    margin-top: 6%;
+    background-color:rgb(240,240,240);
+    font-family: Microsoft YaHei, YouYuan, SimSun, serif;
+}
+
+.shadowBox {
+    padding-left: 10%;
+    margin-bottom: 5%;
+    padding-top: 2%;
+    padding-bottom: 5%;
+    padding-right: 10%;
+    background: white;
+    font-size: medium;
+    text-indent: 2em;
+    display: none;
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
+    border-radius:10px;
+}
+
+.shadowBox:hover {
+    -webkit-box-shadow: #666 0px 0px 10px;
+    -moz-box-shadow: #666 0px 0px 10px;
+    box-shadow: #666 0px 0px 10px;
+}
+
+.shadowBox > .span2 {
+    color: rgb(120, 120, 120);
+}
+
+
+.note {
+    padding: 2% 7% 5% 7%;
+    margin: 3% 17% 10% 17%;
+    background: white;
+    font-size: 20px;
+    -webkit-box-shadow: #666 0px 0px 20px;
+    -moz-box-shadow: #666 0px 0px 20px;
+    box-shadow: #666 0px 0px 20px;
+    display: none;
+}
+
+
+.note > p{
+    text-indent: 2em;
+    color: rgb(100, 100, 100);
+}
+
+.note > ol{
+    color: rgb(100, 100, 100);
+}
+
+
+.alignleft {
+    display: inline;
+    float: left;
+}
+
+.alignright {
+    display: inline;
+    float: right;
+}
+
+.aligncenter {
+    clear: both;
+    display: block;
+    margin: auto;
+}
+

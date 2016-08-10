@@ -1,0 +1,55 @@
+{% extends 'base/layout.html' %}
+
+{% block body %}
+    <body onresize="resizeMetro()" onload="fadeIn()">
+    <script>
+        document.getElementById("nav-article").className = "active";
+
+        function resizeMetro() {
+            for (var i = 0; i < {{ article_num }}; i++) {
+                document.getElementById('article_' + i).style.height = window.innerHeight * 0.15 + "px";
+                document.getElementById('article_' + i).style.width = window.innerWidth * 0.20 + "px";
+                document.getElementById('article_' + i).style.marginTop = window.innerHeight * 0.18 * Math.floor(i / 3) + "px";
+                document.getElementById('article_' + i).style.marginLeft = window.innerWidth * 0.22 * (i % 3) + "px";
+            }
+        }
+
+        function fadeIn(){
+            resizeMetro();
+            for (var i = 0; i < {{ article_num }}; i++) {
+                document.getElementById('article_' + i).style.opacity = 0;
+            }
+            $('.metro').each(function(){
+                var idx = $(this).attr('id').split('_')[1];
+                var left_margin = 1 - idx % 3;
+                var top_margin = 1 - Math.floor(idx / 3);
+                if(idx < 9){
+                    $(this).animate({marginTop: '-='+top_margin+'%', marginLeft: '-='+left_margin+'%'}, 0);
+                    $(this).animate({marginTop: '+='+top_margin+'%', marginLeft: '+='+left_margin+'%', opacity: '1'}, 800);
+                } else{
+                    $(this).animate({marginTop: '-=-1%'}, 0);
+                    $(this).animate({marginTop: '+=-1%', opacity: '1'}, 800);
+                }
+            });
+        }
+
+    </script>
+    <link rel="stylesheet" type="text/css" href="../../static/tool/metro.css">
+
+    <div style="height: {{ article_num * 7 }}%; margin-left: 20%">
+
+        {% for article in article_list %}
+            <a href="{{ article.url }}" class="{{ article.metro_action }}" id="article_{{ article.id }}">
+                <div class="metroFront" style="background-color: {{ article.metro_color }}">
+                    <div>{{ article.title | safe}}</div>
+                </div>
+                <div class="metroBack" style="background-color: {{ article.metro_color }}">
+                    <h4>{{ article.title | safe}}</h4>
+                    {{ article.abstract | safe}}
+                </div>
+            </a>
+        {% endfor %}
+
+    </div>
+</body>
+{% endblock %}

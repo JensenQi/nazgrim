@@ -1,0 +1,66 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Nazgrim</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li id="nav-home"><a href="/"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> 主页</a> </li>
+                <li id="nav-article"><a href="/article"><span class="glyphicon glyphicon-book" aria-hidden="true"></span>文章</a></li>
+                <li id="nav-photo"><a href="/photo"><span class="glyphicon glyphicon-camera" aria-hidden="true"></span>相册</a></li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li><a data-toggle="modal" data-target="#login"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> 登录 </a></li>
+                <li><a data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> 联系我</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> 长文下载</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-link" aria-hidden="true"></span> 更多链接</a></li>
+                <li><a href="#">访问量 <span class="badge">42</span></a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+{#登陆#}
+<div class="modal fade" id="login" tabindex="-1" role="dialog" >
+    <div class="modal-dialog" role="document" align="center">
+        <div class="modal-content" style="width: 50%" align="left">
+
+            <div class="modal-header">
+                <h4 class="modal-title">没错这里只有我自己能登录</h4>
+            </div>
+
+            <div class="modal-body">
+                <span class="glyphicon glyphicon-user">账号</span>
+                <input type="text" class="form-control">
+                <span class="glyphicon glyphicon-lock">密码</span>
+                <input type="password" class="form-control">
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">登录</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">返回</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+{#联系我#}
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">吃饭请联系</h4>
+      </div>
+      <div class="modal-body">
+        <label>E-mail:</label>
+        hit-suit@live.hk
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+      </div>
+    </div>
+  </div>
+</div>

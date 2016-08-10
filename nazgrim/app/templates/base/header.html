@@ -1,0 +1,32 @@
+<header>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    {#    bootstrap#}
+    <link href="../../static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="../../static/bootstrap/js/jquery.min.js"></script>
+    <script src="../../static/bootstrap/js/bootstrap.min.js"></script>
+    {#    mathjax#}
+    <script type="text/javascript" src="../../static/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">
+     MathJax.Hub.Config({ TeX: { equationNumbers: {autoNumber: "all"} }, tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+    {#    highlight.js#}
+    <link rel="stylesheet" href="../../static/highlight/styles/tomorrow.css">
+    <script src="../../static/highlight/highlight.pack.js"></script>
+    <script>
+        hljs.configure({
+            tabReplace: '    '
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+
+{#    emoji#}
+    <script src="../../static/emoji/emojify.min.js"></script>
+    <link rel="stylesheet" href="../../static/emoji/emojify-emoticons.min.css"  type="text/css">
+    <style>
+    .emoji { width: 1.5em; height: 1.5em; display: inline-block; margin-bottom: -.25em; background-size: 1.5em; }
+    </style>
+
+    <link rel="stylesheet" href="../../static/tool/shadow.css" type="text/css">
+
+
+</header>

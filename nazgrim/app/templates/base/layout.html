@@ -1,0 +1,15 @@
+<html>
+    {% block header %}
+        {% include 'base/header.html' ignore missing %}
+    {% endblock %}
+
+    {% block navgation %}
+        {% include 'base/navgation.html' ignore missing %}
+    {% endblock %}
+
+    {% block body %}{% endblock %}
+    {% block footer %}
+        {% include 'base/footer.html' ignore missing %}
+    {% endblock %}
+
+</html>

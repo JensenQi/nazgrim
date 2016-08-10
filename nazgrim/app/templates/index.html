@@ -1,0 +1,89 @@
+{% extends 'base/layout.html' %}
+
+{% block body %}
+<body onload="fadeIn()">
+<script>
+    document.getElementById("nav-home").className = "active";
+    function fadeIn(){
+        $('.shadowBox').fadeIn(1000);
+    }
+</script>
+<div class="container" style="height: 100%">
+
+    <div class="row">
+
+        <!--<div style='width:1px;border:1px solid red;float:left;height:1000px;'>&lt;!&ndash;这个div模拟一条红色的垂直分割线&ndash;&gt;</div>-->
+        <div class="col-md-8">
+
+            <div class="shadowBox">
+                <div align="right" style="margin-top: -5%"><h2><span class="glyphicon glyphicon-bookmark" ></span></h2></div>
+                <div class="span2">
+                    玛利亚妇产医院这个名字有点炫酷，毕竟我们知道，圣母白莲花，啊不，圣母玛利亚生下耶稣的时候还没和约瑟结婚 :smile:天主对约瑟说，中央已经研究决定了 :pouch:，由你来出任这个孩子的父亲[微笑]
+                    <br><hr>
+                </div>
+                <div align="right" class="span2"><span class="glyphicon glyphicon-time" aria-hidden="true">2015-08-09 12:32:31</span></div>
+            </div>
+
+
+            <div class="shadowBox">
+                <div align="right" style="margin-top: -5%"><h2><span class="glyphicon glyphicon-bookmark"></span></h2></div>
+                <div class="span2">
+                    @忍冬_忍冬 告诉我，某同事早上在呼家楼地铁上鞋被挤掉了，然后被人流挤下来了，快关门的时候对着门里大喊：“把鞋帮我踢到东大桥！！！”后来一只脚光着坐下一班地铁到东大桥那站找了半天把鞋捡到了 之后又坐到亮马桥。
+                    <br><hr>
+                </div>
+                <div align="right" class="span2"><span class="glyphicon glyphicon-time" aria-hidden="true">2015-08-09 12:32:31</span></div>
+            </div>
+
+            <div class="shadowBox">
+                <div align="right" style="margin-top: -5%"><h2><span class="glyphicon glyphicon-bookmark"></span></h2></div>
+                <div class="span2">
+                    水波 说:厦门有两个区，一个叫思明，一个叫湖里。某同事从思明区调往湖里区工作，外地同事打办公室电话找他，问: XX在吗？答:他不在了，调到湖里去了。 对方沉默一阵子，问:怎么这么不小心？捞到了吗？
+                    <br><hr>
+                </div>
+                <div align="right" class="span2"><span class="glyphicon glyphicon-time" aria-hidden="true">2015-08-09 12:32:31</span></div>
+            </div>
+
+            <div class="shadowBox">
+                <div align="right" style="margin-top: -5%"><h2><span class="glyphicon glyphicon-bookmark"></span></h2></div>
+                <div class="span2">
+                    不小心中了百度云管家，尝试多次卸载无果，抱着一线希望试了一下360结果成功了，我觉得360可以出一个专治百度系中毒的产品[doge]，然而卸载完成后，360也被我卸了[微笑][微笑][微笑]
+                    <br><hr>
+                </div>
+                <div align="right" class="span2"><span class="glyphicon glyphicon-time" aria-hidden="true">2015-08-09 12:32:31</span></div>
+            </div>
+        </div>
+
+
+        <!--<div style="padding-left: 10%; margin-bottom: 5%; padding-top:2%; padding-bottom:5%; padding-right:10%;background: white; ">-->
+        <div class="col-md-4" style="">
+            <div class="shadowBox">
+                <span class="glyphicon glyphicon-send" aria-hidden="true"></span> About Me
+                <hr>
+                <div align="center" ><img src="../static/image/4.jpg" alt="..." class="img-circle" height="150px"
+                                         width="150px"><br></div><br>
+                <div  class="span2">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;每年，有大约五十万头程序猿由于背锅而造成人身财产的损失，现在，程序猿已被列入互联网濒危物种。 <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;那些背锅的程序猿中，有些被HR用来当挡箭牌，有些被高层用来做企业图腾。<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;即使是没有背锅的程序猿，也被用来从事各种高强度劳动。<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;没有买卖，就没有杀害！<br><br></div>
+            </div>
+
+            <div class="shadowBox">
+                <span class="glyphicon glyphicon-tags" aria-hidden="true"></span> Tags
+                <hr>
+                <span class="label label-success">information</span>
+                <span class="label label-info">machine learning</span>
+                <span class="label label-warning">machine learning</span>
+                <span class="label label-danger">machine learning</span>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+</body>
+{% endblock %}
+
+
+

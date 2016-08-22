@@ -1,2 +1,5 @@
 Flask
 Flask-Script
+flask-sqlalchemy
+markdown2
+mysql-python

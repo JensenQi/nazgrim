@@ -1,17 +1,17 @@
 [
   {
     "url":"/article/DeepLearningInImageRecognition",
-    "title":"深度学习<br>在图像识别中的应用",
+    "title":"深度学习在图像识别中的应用",
     "abstract":"简单介绍图像识别中的深度神经网络应用，内容涉及深度置信网络、马尔可夫链蒙特卡罗方法以及深度卷积网络"
   },
   {
     "url":"/article/LSTM",
-    "title":"序列数据的有监督标注<br>--循环神经网络",
+    "title":"序列数据的有监督标注--循环神经网络",
     "abstract":"《Supervised Sequence Labelling with Recurrent Neural Networks》翻译"
   },
   {
     "url":"/article/OneClassify",
-    "title":"单分类<br>对抗样本缺失下的概念学习",
+    "title":"单分类---对抗样本缺失下的概念学习",
     "abstract":"《One-class classification Concept-learning in the absence of counter-examples》翻译"
   },
   {

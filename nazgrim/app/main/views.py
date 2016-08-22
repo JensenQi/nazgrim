@@ -36,7 +36,7 @@ def article_list():
         article['metro_color'] = random.choice(color)
         article['metro_action'] = random.choice(action)
         article['id'] = idx
-    return render_template('article/list.html', article_list=article_list, article_num=len(article_list))
+    return render_template('article/list_new.html', article_list=article_list, article_num=len(article_list))
 
 
 @nazgrim.route('/article/<article_name>')

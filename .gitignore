@@ -1,3 +1,5 @@
 .idea
-nazgrim/config.ini
 *.pyc
+
+nazgrim/config.ini
+nazgrim/venv/

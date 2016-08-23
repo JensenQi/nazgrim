@@ -10,6 +10,7 @@ from .. import db
 def home():
     from ..models import User
 
+    print 'request index'
     db.create_all()
     text = markdown.to_html('app/article/test.md')
     return render_template('index.html', text=text)

@@ -129,7 +129,8 @@ Main components
   background: #c03b44;
 }
 .cd-timeline-img.cd-location {
-  background: #f0ca45;
+  /*background: #f0ca45;*/
+  background: #b0c4de;
 }
 @media only screen and (min-width: 1170px) {
   .cd-timeline-img {

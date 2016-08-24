@@ -7,7 +7,6 @@ import sys, os
 
 app = create_app()
 
-sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
 logging.basicConfig(
     level=logging.INFO,
     format='[%(levelname)s]\t%(message)s',

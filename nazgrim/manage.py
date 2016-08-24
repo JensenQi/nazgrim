@@ -10,10 +10,10 @@ logging.basicConfig(
     level=logging.INFO,
     format='[%(levelname)s]\t%(message)s',
     datefmt='%y-%m-%d %H:%M:%S',
-    stream=sys.stdout
+    filename='log/flask.log',
+    filemode='a'
 )
 
-# logging初始化要在create app 前，否则 uwsgi 出错
 app = create_app()
 app.logger.addHandler(logging.getLogger())
 

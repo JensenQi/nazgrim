@@ -11,7 +11,8 @@ logging.basicConfig(
     level=logging.INFO,
     format='[%(levelname)s]\t%(message)s',
     datefmt='%y-%m-%d %H:%M:%S',
-    stream=sys.stdout
+    filename='log/flask.log',
+    filemode='a'
 )
 
 app.logger.addHandler(logging.getLogger())

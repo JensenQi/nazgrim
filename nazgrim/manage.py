@@ -5,7 +5,6 @@ from app import create_app
 import logging
 import sys, os
 
-app = create_app()
 
 logging.basicConfig(
     level=logging.INFO,
@@ -14,6 +13,8 @@ logging.basicConfig(
     stream=sys.stdout
 )
 
+# logging初始化要在create app 前，否则 uwsgi 出错
+app = create_app()
 app.logger.addHandler(logging.getLogger())
 
 manager = Manager(app)

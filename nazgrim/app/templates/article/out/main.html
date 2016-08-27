@@ -9365,7 +9365,8 @@ pdf2htmlEX.defaultViewer = new pdf2htmlEX.Viewer({});
 </html>
 {% endraw %}
 <script>
-    $('#sidebar').css({marginTop:"3.5%"});
-    $('#page-container').css({marginTop:"3.5%"});
+    var height = $('#navbar').height();
+    $('#sidebar').css({marginTop:height});
+    $('#page-container').css({marginTop:height});
 </script>
 {% endblock %}

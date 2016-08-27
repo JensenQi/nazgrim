@@ -21,10 +21,15 @@ def article_list():
     return render_template('article/list.html', article_list=article_list)
 
 
+@nazgrim.route('/article/out/<page_name>')
+def get_page(page_name):
+    return send_file('templates/article/out/%s' % page_name)
+
+
 @nazgrim.route('/article/<article_name>')
 def article(article_name):
-    html = markdown.to_html('app/article/%s/main.md' % article_name)
-    return render_template('article/main.html')
+    # html = markdown.to_html('app/article/%s/main.md' % article_name)
+    return render_template('article/out/main.html')
 
 
 @nazgrim.route('/article/<article_name>/image/<image_name>')

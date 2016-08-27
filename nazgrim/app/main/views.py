@@ -24,7 +24,7 @@ def article_list():
 @nazgrim.route('/article/<article_name>')
 def article(article_name):
     html = markdown.to_html('app/article/%s/main.md' % article_name)
-    return render_template('article/show.html', text=html)
+    return render_template('article/main.html')
 
 
 @nazgrim.route('/article/<article_name>/image/<image_name>')

@@ -1,20 +1,20 @@
-{% extends 'base/layout.html' %}
+<html>
 
-{% block body %}
-<body onload="fadeIn()">
-<script>
-    function fadeIn(){
-        $('.note').fadeIn(1000);
-    }
-</script>
-<script>
-    document.getElementById("nav-article").className = "active";
-</script>
-<div class="note">
-    <div align="right" style="margin-top: -4%"><h1><span class="glyphicon glyphicon-bookmark" ></span></h1></div>
-    {{ text | safe}}
-</div>
-    </body>
+<header>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    {#    bootstrap#}
+    <link href="../../static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="../../static/bootstrap/js/jquery.min.js"></script>
+    <script src="../../static/bootstrap/js/bootstrap.min.js"></script>
+</header>
+
+{% block navgation %}
+{% include 'base/navgation.html' ignore missing %}
 {% endblock %}
 
+{% block body %}{% endblock %}
+{% block footer %}
+{% include 'base/footer.html' ignore missing %}
+{% endblock %}
 
+</html>

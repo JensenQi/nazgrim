@@ -1,20 +1,20 @@
-<html>
+{% extends "base/layout.html" %}
 
+{% block header %}
 <header>
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    {#    bootstrap#}
-    <link href="../../static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    {#    由于会产生冲突，因此需要特定的bootstrap#}
+    <link href="../../static/bootstrap/css/bootstrap.spcial.css" rel="stylesheet">
     <script src="../../static/bootstrap/js/jquery.min.js"></script>
     <script src="../../static/bootstrap/js/bootstrap.min.js"></script>
 </header>
-
-{% block navgation %}
-{% include 'base/navgation.html' ignore missing %}
 {% endblock %}
 
-{% block body %}{% endblock %}
-{% block footer %}
-{% include 'base/footer.html' ignore missing %}
+{% block body %}
+{{ text | safe }}
+<script>
+    var height = $('#navbar').height();
+    $('#sidebar').css({marginTop:height});
+    $('#page-container').css({marginTop:height});
+</script>
 {% endblock %}
-
-</html>

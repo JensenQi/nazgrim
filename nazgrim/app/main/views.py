@@ -1,35 +1,40 @@
 # -*- coding:utf-8 -*-
 __author__ = 'jinxiu.qi'
 from . import nazgrim
-from ..tools.markdown import markdown
 from flask import render_template, send_file, request
 from .. import db
 import json
+import os
 
+MEDIVH_PATH = os.path.abspath('../medivh')
 
 @nazgrim.route('/')
 def home():
     from ..models import User
     db.create_all()
-    text = markdown.to_html('app/article/test.md')
-    return render_template('index.html', text=text)
+    return render_template('index.html')
 
 
 @nazgrim.route('/article')
 def article_list():
-    article_list = json.load(open('app/article/articles.json'))
+    path = os.path.join(MEDIVH_PATH, 'list.json')
+    article_list = json.load(open(path))
     return render_template('article/list.html', article_list=article_list)
 
 
-@nazgrim.route('/article/out/<page_name>')
-def get_page(page_name):
-    return send_file('templates/article/out/%s' % page_name)
+@nazgrim.route('/article/<article_name>/<page_name>')
+def get_page(article_name, page_name):
+    path = os.path.join(MEDIVH_PATH, article_name, 'html', 'pages', page_name)
+    return send_file(path)
 
 
 @nazgrim.route('/article/<article_name>')
 def article(article_name):
-    # html = markdown.to_html('app/article/%s/main.md' % article_name)
-    return render_template('article/out/main.html')
+    print request.url
+    path = os.path.join(MEDIVH_PATH, article_name, 'html', 'main.html')
+    with open(path) as fp:
+        text = fp.read()
+    return render_template('article/show.html', text=text)
 
 
 @nazgrim.route('/article/<article_name>/image/<image_name>')

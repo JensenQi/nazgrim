@@ -2,25 +2,25 @@
 
 {% block body %}
 <body>
-    <link rel="stylesheet" type="text/css" href="../../static/tool/timeline.css">
-
-
+<script>
+    document.getElementById("nav-article").className = "active";
+</script>
+<link rel="stylesheet" type="text/css" href="../../static/tool/timeline.css">
 <section id="cd-timeline" class="cd-container">
-        {% for article in article_list %}
-        <div class="cd-timeline-block">
-            <div class="cd-timeline-img cd-location">
-                <img src="../../static/image/cd-icon-location.svg" alt="Location">
-            </div>
-
-            <div class="cd-timeline-content">
-                <h2>{{ article.title | safe}}</h2>
-                <p>{{ article.abstract | safe}}</p>
-                <a href="{{ article.url }}" class="cd-read-more" target="_parent">阅读全文</a>
-                <span class="cd-date">{{ article.date }}</span>
-            </div>
+    {% for article in article_list %}
+    <div class="cd-timeline-block">
+        <div class="cd-timeline-img cd-location">
+            <img src="../../static/image/cd-icon-location.svg" alt="Location">
         </div>
 
-        {% endfor %}
+        <div class="cd-timeline-content">
+            <h2>{{ article.title | safe}}</h2>
+            <p>{{ article.abstract | safe}}</p>
+            <a href="{{ article.url }}" class="cd-read-more" target="_parent">阅读全文</a>
+            <span class="cd-date">{{ article.date }}</span>
+        </div>
+    </div>
+    {% endfor %}
 </section>
 </body>
 {% endblock %}

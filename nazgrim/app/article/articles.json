@@ -1,8 +1,8 @@
 [
   {
-    "url":"/article/DeepLearningInImageRecognition",
-    "title":"深度学习在图像识别中的应用",
-    "abstract":"简单介绍图像识别中的深度神经网络应用，内容涉及深度置信网络、马尔可夫链蒙特卡罗方法以及深度卷积网络"
+    "url":"/article/OneClassify",
+    "title":"单分类---对抗样本缺失下的概念学习",
+    "abstract":"《One-class classification Concept-learning in the absence of counter-examples》翻译"
   },
   {
     "url":"/article/LSTM",
@@ -10,9 +10,14 @@
     "abstract":"《Supervised Sequence Labelling with Recurrent Neural Networks》翻译"
   },
   {
-    "url":"/article/OneClassify",
-    "title":"单分类---对抗样本缺失下的概念学习",
-    "abstract":"《One-class classification Concept-learning in the absence of counter-examples》翻译"
+    "url":"/article/Qdata",
+    "title":"去哪儿技术嘉年华Qdata场次演讲稿",
+    "abstract":"这是去哪儿第二届技术嘉年华数据场关于深度学习在金融信贷中应用的演讲稿"
+  },
+  {
+    "url":"/article/DeepLearningInImageRecognition",
+    "title":"深度学习在图像识别中的应用",
+    "abstract":"简单介绍图像识别中的深度神经网络应用，内容涉及深度置信网络、马尔可夫链蒙特卡罗方法以及深度卷积网络"
   },
   {
     "url": "/article/latex",

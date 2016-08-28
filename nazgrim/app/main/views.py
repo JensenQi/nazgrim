@@ -30,7 +30,6 @@ def get_page(article_name, page_name):
 
 @nazgrim.route('/article/<article_name>')
 def article(article_name):
-    print request.url
     path = os.path.join(MEDIVH_PATH, article_name, 'html', 'main.html')
     with open(path) as fp:
         text = fp.read()

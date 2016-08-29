@@ -3,4 +3,5 @@
 
 nazgrim/config.ini
 nazgrim/venv/
-nazgrim/log
+nazgrim/log/
+nazgrim/config/

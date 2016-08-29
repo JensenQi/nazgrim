@@ -14,7 +14,9 @@ def create_app():
     db.init_app(app)
 
     from .main import nazgrim
+    from .auth import auth
     app.register_blueprint(nazgrim)
+    app.register_blueprint(auth, url_prefix='/auth')
 
     return app
 

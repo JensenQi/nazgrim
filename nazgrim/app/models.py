@@ -1,9 +1,11 @@
 # -*- coding:utf-8 -*-
 __author__ = 'jinxiu.qi'
-from . import db
+from . import db, login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask.ext.login import UserMixin
 
-class User(db.Model):
+
+class User(UserMixin, db.Model):
     __table__name = 'user'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
@@ -22,3 +24,8 @@ class User(db.Model):
 
     def __repr__(self):
         return 'user', self.id, self.name
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))

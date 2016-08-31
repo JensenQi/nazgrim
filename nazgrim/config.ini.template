@@ -1,3 +1,6 @@
 [db]
 # URI = mysql+mysqldb://mysql_user:mysql_pwd@mysql_host/database_name
 URI = mysql+mysqldb://root:root@localhost/nazgrim
+
+[secret]
+key = anything_you_want

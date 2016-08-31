@@ -15,5 +15,7 @@
     <orderEntry type="library" name="scala-sdk-2.10.4" level="application" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:3.8.1" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:19.0" level="project" />
+    <orderEntry type="library" name="scala-sdk-2.10.4" level="application" />
+    <orderEntry type="library" name="scala-sdk-2.10.4" level="application" />
   </component>
 </module>

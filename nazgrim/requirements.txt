@@ -2,5 +2,4 @@ Flask
 Flask-Script
 flask-sqlalchemy
 flask-login
-markdown2
 mysql-python

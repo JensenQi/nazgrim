@@ -1,7 +1,10 @@
 .idea
 *.pyc
 
-nazgrim/config.ini
 nazgrim/venv/
 nazgrim/log/
-nazgrim/config/
+
+nazgrim/config.ini
+nazgrim/config/nginx.conf
+nazgrim/config/supervisor.conf
+nazgrim/config/uwsgi.ini

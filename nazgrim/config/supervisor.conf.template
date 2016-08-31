@@ -1,0 +1,11 @@
+[program:nazgrim]
+
+command=uwsgi /path/to/git/apps/nazgrim/config/uwsgi.ini
+
+directory=/path/to/git/apps/nazgrim
+user=root
+
+autostart=true
+autorestart=true
+
+stdout_logfile=/path/to/git/apps/nazgrim/log/request.log

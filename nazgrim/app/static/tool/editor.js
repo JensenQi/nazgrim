@@ -509,11 +509,11 @@ You should have received a copy of the GNU General Public License along with thi
 			var menuItems = { 'fonteffects': true,
 							  'texteffects': true,
 							  'aligneffects': true,
+						      'advancedoptions' : true,
 							  'textformats':true,
 							  'actions' : true,
 							  'insertoptions' : true,
 							  'extraeffects' : true,
-							  'advancedoptions' : true,
 
 							  'fonts'	: { "select":true,
 											"default": "Font",

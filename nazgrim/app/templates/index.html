@@ -8,10 +8,19 @@
         $('.shadowBox').fadeIn(1000);
     }
 </script>
+
+
+
 <div class="container">
     <div class="row">
-        <!--<div style='width:1px;border:1px solid red;float:left;height:1000px;'>&lt;!&ndash;这个div模拟一条红色的垂直分割线&ndash;&gt;</div>-->
         <div class="col-md-8">
+
+            <div id="txtEditor"></div>
+            <script type="text/javascript">
+                $(document).ready( function() {
+                    $("#txtEditor").Editor();
+                });
+            </script>
 
             <div class="shadowBox">
                 <div align="right" style="margin-top: -5%"><h2><span class="glyphicon glyphicon-bookmark"></span></h2>

@@ -14,8 +14,13 @@
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
+                {% if current_user.is_authenticated %}
+                <li><a href="#" id="logout_url"><span class="glyphicon glyphicon glyphicon-log-out"
+                                                      aria-hidden="true"></span> 登出</a></li>
+                {% else %}
                 <li><a data-toggle="modal" data-target="#login"><span class="glyphicon glyphicon-log-in"
-                                                                      aria-hidden="true"></span> 登录 </a></li>
+                                                                      aria-hidden="true"></span> 登陆 </a></li>
+                {% endif %}
                 <li><a data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-envelope"
                                                                         aria-hidden="true"></span> 联系我</a></li>
                 <li><a href="#"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> 长文下载</a></li>
@@ -56,7 +61,8 @@
     </div>
 </div>
 <script>
-   $("#page_url").val(window.location.href);
+    $("#page_url").val(window.location.href);
+    $("#logout_url").attr("href", "/auth/logout?next=" + window.location.href);
 </script>
 
 

@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 __author__ = 'jinxiu.qi'
 from . import nazgrim
-from flask import render_template, send_file, request
+from flask import render_template, send_file, request, redirect
 from .. import db
 import json
 import os
@@ -14,6 +14,11 @@ def home():
     db.create_all()
     return render_template('index.html')
 
+@nazgrim.route('/new_note', methods=['Post'])
+def new_note():
+    content = request.form.get('content')
+    print content
+    return render_template('index.html')
 
 @nazgrim.route('/article')
 def article_list():

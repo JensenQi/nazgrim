@@ -521,6 +521,20 @@
                 'actions': true,
                 'insertoptions': true,
                 'advancedoptions': true,
+                'submitaction': true,
+
+                'submit': {
+                    "text": "提交",
+                    "icon": "fa fa-paper-plane-o",
+                    "tooltip": "提交",
+                    "commandname": null,
+                    "custom": function(button, parameters){
+                        var content = $(this).data('editor').html();
+                        $.post('/new_note', {content:content}, function(result){
+                            location.reload();
+                        });
+                    }
+                },
 
                 'fonts': {
                     "select": true,
@@ -1048,7 +1062,8 @@
                 'actions': ['undo', 'redo'],
                 'insertoptions': ['insert_link', 'unlink', 'insert_img', 'insert_table'],
                 'extraeffects': ['strikeout', 'hr_line', 'splchars'],
-                'advancedoptions': ['print', 'rm_format', 'select_all', 'source']
+                'advancedoptions': ['print', 'rm_format', 'select_all', 'source'],
+                'submitaction':['submit']
             };
 
             var settings = $.extend({
@@ -1060,6 +1075,8 @@
                 'insertoptions': true,
                 'extraeffects': true,
                 'advancedoptions': true,
+                'submitaction': true,
+                'submit': true,
                 'bold': true,
                 'italics': true,
                 'underline': true,
@@ -1280,7 +1297,7 @@
         createTableContext: function (event, cMenuUl) {
             $('#editProperties').remove();
             var modalId = "editProperties";
-            var modalHeader = "Table Properties";
+            var modalHeader = "表格属性";
             var tblModalBody = methods.tableWidget.apply(this, ["edit"]);
             var onSave = function () {
                 var tblWidthEdt = $('#tblWidthEdt').val();
@@ -1324,7 +1341,7 @@
             methods.createModal.apply(this, [modalId, modalHeader, tblModalBody, onSave]);
             var modalTrigger = $('<a/>', {
                 href: "#" + modalId,
-                "text": "Table Properties",
+                "text": "表格属性",
                 "data-toggle": "modal"
             }).click(function (e) {
                 return function () {
@@ -1345,12 +1362,12 @@
             }(event));
 
             cMenuUl.append($('<li/>', {class: "dropdown-submenu", css: {display: "block"}})
-                .append($('<a/>', {"tabindex": "-1", href: "javascript:void(0)", "text": "Row"}))
+                .append($('<a/>', {"tabindex": "-1", href: "javascript:void(0)", "text": "行"}))
                 .append($('<ul/>', {class: "dropdown-menu"})
                     .append($('<li/>').append($('<a/>', {
                         id: "tbl_addrow",
                         "href": "javascript:void(0)",
-                        "text": "Add Row"
+                        "text": "追加一行"
                     }).click(function (e) {
                         return function () {
                             var row = $(e.target).closest('table').prop('rows').length;
@@ -1364,7 +1381,7 @@
                             $('#context-menu').remove();
                         }
                     }(event))))
-                    .append($('<li/>').append($('<a/>', {text: "Remove Row"}).click(
+                    .append($('<li/>').append($('<a/>', {text: "删除鼠标所在行"}).click(
                         function (e) {
                             return function () {
                                 $('#context-menu').remove();
@@ -1372,12 +1389,12 @@
                             }
                         }(event))))
                 )).append($('<li/>', {class: "dropdown-submenu", css: {display: "block"}})
-                .append($('<a/>', {"tabindex": "-1", href: "javascript:void(0)", "text": "Column"}))
+                .append($('<a/>', {"tabindex": "-1", href: "javascript:void(0)", "text": "列"}))
                 .append($('<ul/>', {class: "dropdown-menu"})
                     .append($('<li/>').append($('<a/>', {
                         id: "tbl_addcolumn",
                         "href": "javascript:void(0)",
-                        "text": "Add Column",
+                        "text": "追加一列",
                     }).click(function (e) {
                         return function () {
                             var row = $(e.target).closest('table').prop('rows').length;
@@ -1388,7 +1405,7 @@
                             $('#context-menu').remove();
                         }
                     }(event))))
-                    .append($('<li/>').append($('<a/>', {text: "Remove Column"}).click(
+                    .append($('<li/>').append($('<a/>', {text: "删除鼠标所在列"}).click(
                         function (e) {
                             return function () {
                                 $('#context-menu').remove();
@@ -1401,7 +1418,7 @@
                 ));
             cMenuUl.append($('<li/>').append(modalTrigger))
                 .append($('<li/>', {class: "divider"}))
-                .append($('<li/>').append($('<a/>', {text: "Remove Table"}).click(
+                .append($('<li/>').append($('<a/>', {text: "删除表格"}).click(
                     function (e) {
                         return function () {
                             $('#context-menu').remove();
@@ -1593,50 +1610,6 @@
                 button.parent().siblings().show();
                 button.siblings().show();
             }
-        },
-
-        countWords: function (node) {
-            //Function to count the number of words recursively as the text grows in the editor.
-            var count = 0;
-            var textNodes = node.contents().filter(function () {
-                return (this.nodeType == 3);
-            });
-            for (var index = 0; index < textNodes.length; index++) {
-                text = textNodes[index].textContent;
-                text = text.replace(/[^-\w\s]/gi, ' ');
-                text = $.trim(text);
-                count = count + text.split(/\s+/).length;
-            }
-            var childNodes = node.children().each(function () {
-                count = count + methods.countWords.apply(this, [$(this)]);
-            });
-            return count
-        },
-
-        countChars: function (node) {
-            //Function to count the number of characters recursively as the text grows in the editor.
-            var count = 0;
-            var textNodes = node.contents().filter(function () {
-                return (this.nodeType == 3);
-            });
-            for (var index = 0; index < textNodes.length; index++) {
-                text = textNodes[index].textContent;
-                count = count + text.length;
-            }
-            var childNodes = node.children().each(function () {
-                count = count + methods.countChars.apply(this, [$(this)]);
-            });
-            return count;
-        },
-
-        getWordCount: function () {
-            //Function to return the word count of the text in the editor
-            return methods.countWords.apply(this, [$(this).data("editor")]);
-        },
-
-        getCharCount: function () {
-            //Function to return the character count of the text in the editor
-            return methods.countChars.apply(this, [$(this).data("editor")]);
         },
 
         rgbToHex: function (rgb) {

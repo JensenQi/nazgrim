@@ -10,8 +10,6 @@ MEDIVH_PATH = os.path.abspath('../medivh')
 
 @nazgrim.route('/')
 def home():
-    from ..models import User
-    db.create_all()
     return render_template('index.html')
 
 @nazgrim.route('/new_note', methods=['Post'])

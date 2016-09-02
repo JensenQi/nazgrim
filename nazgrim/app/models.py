@@ -3,10 +3,11 @@ __author__ = 'jinxiu.qi'
 from . import db, login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask.ext.login import UserMixin
+from datetime import datetime
 
 
 class User(UserMixin, db.Model):
-    __table__name = 'user'
+    __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
     password_hash = db.Column(db.String(128))
@@ -29,3 +30,11 @@ class User(UserMixin, db.Model):
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+
+class Notes(db.Model):
+    __tablename__ = 'notes'
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text)
+    status = db.Column(db.SmallInteger, index=True)
+    create_time = db.Column(db.DateTime, default=datetime.now())

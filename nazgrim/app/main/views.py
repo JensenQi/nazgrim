@@ -1,22 +1,30 @@
 # -*- coding:utf-8 -*-
 __author__ = 'jinxiu.qi'
 from . import nazgrim
-from flask import render_template, send_file, request, redirect
+from flask import render_template, send_file, request
+from flask.ext.login import login_required
 from .. import db
+from ..models import Notes
 import json
 import os
 
 MEDIVH_PATH = os.path.abspath('../medivh')
 
+
 @nazgrim.route('/')
 def home():
     return render_template('index.html')
 
+
 @nazgrim.route('/new_note', methods=['Post'])
+@login_required
 def new_note():
     content = request.form.get('content')
-    print content
+    note = Notes(content=content, status=1)
+    db.session.add(note)
+    db.session.commit()
     return render_template('index.html')
+
 
 @nazgrim.route('/article')
 def article_list():

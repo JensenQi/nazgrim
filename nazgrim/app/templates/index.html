@@ -26,7 +26,11 @@
             {% for note in notes %}
             <div class="shadowBox">
                 <div align="right" style="margin-top: -5%">
-                    <h2><a class="glyphicon glyphicon-bookmark" href="/delete_note?id={{ note.id }}" style="text-decoration: none"></a></h2>
+                    {% if current_user.is_authenticated %}
+                        <h2><a class="glyphicon glyphicon-bookmark" href="/delete_note?id={{ note.id }}" style="text-decoration: none"></a></h2>
+                    {% else %}
+                        <h2><span class="glyphicon glyphicon-bookmark"></span></h2>
+                    {% endif %}
                 </div>
                 <div class="span2">
                     {{ note.content | safe }}<br>

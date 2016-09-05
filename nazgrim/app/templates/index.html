@@ -10,7 +10,6 @@
 </script>
 
 
-
 <div class="container">
     <div class="row">
         <div class="col-md-8">
@@ -18,17 +17,33 @@
             {% if current_user.is_authenticated %}
             <div id="txtEditor"></div>
             <script type="text/javascript">
-                $(document).ready( function() {
+                $(document).ready(function () {
                     $("#txtEditor").Editor();
                 });
             </script>
             {% endif %}
 
+            {% for note in notes %}
+            <div class="shadowBox">
+                <div align="right" style="margin-top: -5%">
+                    <h2><a class="glyphicon glyphicon-bookmark" href="/delete_note?id={{ note.id }}" style="text-decoration: none"></a></h2>
+                </div>
+                <div class="span2">
+                    {{ note.content | safe }}<br>
+                    <hr>
+                </div>
+                <div align="right" class="span2">
+                    <span class="glyphicon glyphicon-time" aria-hidden="true">{{ note.create_time }}</span>
+                </div>
+            </div>
+            {% endfor %}
+
             <div class="shadowBox">
                 <div align="right" style="margin-top: -5%"><h2><span class="glyphicon glyphicon-bookmark"></span></h2>
                 </div>
                 <div class="span2">
-                    玛利亚妇产医院这个名字有点炫酷，毕竟我们知道，圣母白莲花，啊不，圣母玛利亚生下耶稣的时候还没和约瑟结婚 :smile:天主对约瑟说，中央已经研究决定了 :pouch:，由你来出任这个孩子的父亲 :smile:
+                    玛利亚妇产医院这个名字有点炫酷，毕竟我们知道，圣母白莲花，啊不，圣母玛利亚生下耶稣的时候还没和约瑟结婚 :smile:天主对约瑟说，中央已经研究决定了 :pouch:，由你来出任这个孩子的父亲
+                    :smile:
                     <br>
                     <hr>
                 </div>

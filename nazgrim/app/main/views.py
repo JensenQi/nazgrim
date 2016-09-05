@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 __author__ = 'jinxiu.qi'
 from . import nazgrim
-from flask import render_template, send_file, request
+from flask import render_template, send_file, request, redirect
 from flask.ext.login import login_required
 from .. import db
 from ..models import Notes
@@ -13,7 +13,8 @@ MEDIVH_PATH = os.path.abspath('../medivh')
 
 @nazgrim.route('/')
 def home():
-    return render_template('index.html')
+    notes = Notes.query.filter_by(status=1).order_by("id desc").all()
+    return render_template('index.html', notes=notes)
 
 
 @nazgrim.route('/new_note', methods=['Post'])
@@ -25,6 +26,14 @@ def new_note():
     db.session.commit()
     return render_template('index.html')
 
+
+@nazgrim.route('/delete_note', methods=['Get'])
+@login_required
+def delete_note():
+    note = Notes.query.filter_by(id=request.args.get('id')).first()
+    note.status = 0
+    db.session.commit()
+    return redirect('/')
 
 @nazgrim.route('/article')
 def article_list():

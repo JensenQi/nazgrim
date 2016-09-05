@@ -37,4 +37,4 @@ class Notes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text)
     status = db.Column(db.SmallInteger, index=True)
-    create_time = db.Column(db.DateTime, default=datetime.now())
+    create_time = db.Column(db.DateTime)

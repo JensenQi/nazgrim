@@ -7,6 +7,7 @@ from .. import db
 from ..models import Notes
 import json
 import os
+from datetime import datetime
 
 MEDIVH_PATH = os.path.abspath('../medivh')
 
@@ -21,7 +22,7 @@ def home():
 @login_required
 def new_note():
     content = request.form.get('content')
-    note = Notes(content=content, status=1)
+    note = Notes(content=content, status=1, create_time=datetime.now())
     db.session.add(note)
     db.session.commit()
     return render_template('index.html')

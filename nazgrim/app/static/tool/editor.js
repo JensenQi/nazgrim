@@ -529,7 +529,9 @@
                     "tooltip": "提交",
                     "commandname": null,
                     "custom": function(button, parameters){
+                        //var content = $(this).data('editor').html().replace(/<div>/g, '').replace(/<\/div>/g, '\n');
                         var content = $(this).data('editor').html();
+                        alert(content);
                         $.post('/new_note', {content:content}, function(result){
                             location.reload();
                         });
@@ -580,13 +582,13 @@
                             "width": "145px",
                             "display": "Block",
                             "height": "25px"
-                        }).html('<div>Text Color</div>'));
+                        }).html('<div>文字颜色</div>'));
                         var bgPalletteDiv = $('<div/>', {id: "bg_colorpellete"});
                         var bgPallette = $('<ul />', {id: "bgcolor_ui"}).append($('<li />').css({
                             "width": "145px",
                             "display": "Block",
                             "height": "25px"
-                        }).html('<div>Background Color</div>'));
+                        }).html('<div>文字底色</div>'));
                         if (editor.data("colorBtn")) {
                             flag = 1;
                             editor.data("colorBtn", null);
@@ -650,6 +652,16 @@
                     "tooltip": "加粗",
                     "commandname": "bold",
                     "custom": null
+                },
+
+                'insert_html': {
+                    "text": "HTML",
+                    "icon": "fa fa-bold",
+                    "tooltip": "插入HTML",
+                    "commandname": null,
+                    "custom":  function(button, parameters){
+                        document.execCommand('insertHTML', false, window.getSelection());
+                    }
                 },
 
                 'italics': {
@@ -1062,7 +1074,7 @@
                 'actions': ['undo', 'redo'],
                 'insertoptions': ['insert_link', 'unlink', 'insert_img', 'insert_table'],
                 'extraeffects': ['strikeout', 'hr_line', 'splchars'],
-                'advancedoptions': ['print', 'rm_format', 'select_all', 'source'],
+                'advancedoptions': ['print', 'rm_format', 'select_all', 'insert_html', 'source'],
                 'submitaction':['submit']
             };
 
@@ -1077,6 +1089,7 @@
                 'advancedoptions': true,
                 'submitaction': true,
                 'submit': true,
+                'insert_html': true,
                 'bold': true,
                 'italics': true,
                 'underline': true,

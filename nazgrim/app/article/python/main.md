@@ -1,5 +1,5 @@
 <h1 align="center">python代码highlight测试</h1>
-<pre style="margin: 2% 5% 2% 5%;"><code class="python">
+<code class="python">
 # -*- coding:utf-8 -*-
 __author__ = 'jinxiu.qi'
 from . import db
@@ -24,4 +24,4 @@ class User(db.Model):
 
     def __repr__(self):
         return 'user', self.id, self.name
-</code></pre>
+</code>

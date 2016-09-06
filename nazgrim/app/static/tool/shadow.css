@@ -12,7 +12,6 @@ body {
     padding-right: 10%;
     background: white;
     font-size: medium;
-    text-indent: 2em;
     display: none;
     -moz-border-radius:10px;
     -webkit-border-radius:10px;
@@ -43,7 +42,6 @@ body {
 
 
 .note > p{
-    text-indent: 2em;
     color: rgb(100, 100, 100);
 }
 

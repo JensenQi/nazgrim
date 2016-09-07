@@ -463,27 +463,46 @@
                 {name: 'MidnightBlue', hex: '#20124D'},
                 {name: 'DarkMaroon', hex: '#4C1130'}];
 
-            var specialchars = [{name: "Exclamation ", text: "!"},
-                {name: "At", text: "@"},
-                {name: "Hash", text: "#"},
-                {name: "Percentage", text: "%"},
-                {name: "Uppercase", text: "^"},
-                {name: "Ampersand", text: "&"},
-                {name: "Asterisk", text: "*"},
-                {name: "OpenBracket", text: "("},
-                {name: "CloseBracket", text: ")"},
-                {name: "Underscore", text: "_"},
-                {name: "Hiphen", text: "-"},
-                {name: "Plus", text: "+"},
-                {name: "Equalto", text: "="},
-                {name: "OpenSquareBracket", text: "["},
-                {name: "CloseSquareBracket", text: "]"},
-                {name: "OpenCurly", text: "{"},
-                {name: "CloseCurly", text: "}"},
-                {name: "Pipe", text: "|"},
-                {name: "Colon", text: ":"},
-                {name: "Semicolon", text: ";"},
-                {name: "Single quote", text: "&#39;"},
+            var language = [
+                {name:"python", text:"python"},
+                {name:"java", text:"java"},
+                {name:"shell", text:"shell"},
+                {name:"LaTeX", text:"LaTeX"},
+                {name:"raw", text:"raw"}
+            ];
+
+            var specialchars = [
+                {name: "alpha", text: "α"},
+                {name: "beta", text: "β"},
+                {name: "gamma", text: "γ"},
+                {name: "Gamma", text: "Γ"},
+                {name: "delta", text: "δ"},
+                {name: "Delta", text: "Δ"},
+                {name: "epsilon", text: "ε"},
+                {name: "zeta", text: "ζ"},
+                {name: "eta", text: "η"},
+                {name: "theta", text: "θ"},
+                {name: "Theta", text: "Θ"},
+                {name: "lambda", text: "λ"},
+                {name: "Lambda", text: "Λ"},
+                {name: "mu", text: "μ"},
+                {name: "nu", text: "ν"},
+                {name: "xi", text: "ξ"},
+                {name: "Xi", text: "Ξ"},
+                {name: "pi", text: "π"},
+                {name: "Pi", text: "Π"},
+                {name: "rho", text: "ρ"},
+                {name: "sigma", text: "σ"},
+                {name: "Sigma", text: "Σ"},
+                {name: "tau", text: "τ"},
+                {name: "phi", text: "φ"},
+                {name: "Phi", text: "Φ"},
+                {name: "chi", text: "χ"},
+                {name: "psi", text: "ψ"},
+                {name: "Psi", text: "Ψ"},
+                {name: "omega", text: "ω"},
+                {name: "Omega", text: "Ω"},
+
                 {name: "Double quote", text: "&#34;"},
                 {name: "Left single curly quote", text: "&lsquo;"},
                 {name: "right single curly quote", text: "&rsquo;"},
@@ -517,8 +536,8 @@
                 'texteffects': true,
                 'aligneffects': true,
                 'extraeffects': true,
-                'textformats': true,
                 'actions': true,
+                'textformats': true,
                 'insertoptions': true,
                 'advancedoptions': true,
                 'submitaction': true,
@@ -529,9 +548,7 @@
                     "tooltip": "提交",
                     "commandname": null,
                     "custom": function(button, parameters){
-                        //var content = $(this).data('editor').html().replace(/<div>/g, '').replace(/<\/div>/g, '\n');
                         var content = $(this).data('editor').html();
-                        alert(content);
                         $.post('/new_note', {content:content}, function(result){
                             location.reload();
                         });
@@ -656,11 +673,56 @@
 
                 'insert_html': {
                     "text": "HTML",
-                    "icon": "fa fa-bold",
+                    "icon": "fa fa-code",
                     "tooltip": "插入HTML",
                     "commandname": null,
                     "custom":  function(button, parameters){
-                        document.execCommand('insertHTML', false, window.getSelection());
+                        methods.restoreIESelection.apply(this);
+                        var flag = 0;
+                        var languageDiv = $('<div/>', {
+                            id: "specialchar",
+                            class: "language",
+                            css: {"display": "none"}
+                        }).click(function (event) {
+                            event.stopPropagation();
+                        });
+                        var languageUI = $('<ul />', {id: "special_ui"});
+                        var editor_Content = this;
+                        if ($(this).data("editor").data("splcharsBtn")) {
+                            flag = 1;
+                            $(this).data("editor").data("splcharsBtn", null);
+                        }
+                        else
+                            $(this).data("editor").data("splcharsBtn", 1);
+
+                        if (flag == 0) {
+                            for (var i = 0; i < language.length; i++) {
+                                languageUI.append($('<li />').html(language[i].text).attr('title', language[i].name).mousedown(function (event) {
+                                    event.preventDefault();
+                                }).click(function (event) {
+                                    if (navigator.userAgent.match(/MSIE/i)) {
+                                        var specCharHtml = $(this).html();
+                                        methods.insertTextAtSelection.apply(this, [specCharHtml, 'html']);
+                                    }
+                                    else {
+                                        if($(this).html() == 'raw'){
+                                            document.execCommand('insertHTML', false, window.getSelection());
+                                        }else if($(this).html() == 'LaTeX'){
+                                            document.execCommand('insertHTML', false, '\\begin{equation}' + window.getSelection() + '\\end{equation}');
+                                        }else{
+                                            document.execCommand('insertHTML', false, '<pre><code class="' + $(this).html() + '">' + window.getSelection() + '</code></pre>');
+                                        }
+                                    }
+                                    $('#specialchar').remove();
+                                    $(editor_Content).data("editor").data("splcharsBtn", null);
+                                }));
+                            }
+                            languageUI.prependTo(languageDiv);
+                            languageDiv.insertAfter(button);
+                            $('#specialchar').slideDown('slow');
+                        }
+                        else
+                            $('#specialchar').remove();
                     }
                 },
 
@@ -1006,7 +1068,7 @@
 
                 'splchars': {
                     "text": "S",
-                    "icon": "fa fa-asterisk",
+                    "icon": "fa fa-glide-g",
                     "tooltip": "插入特殊符号",
                     "commandname": null,
                     "custom": function (button) {
@@ -1038,7 +1100,7 @@
                                         methods.insertTextAtSelection.apply(this, [specCharHtml, 'html']);
                                     }
                                     else {
-                                        document.execCommand('insertHTML', false, $(this).html());
+                                        document.execCommand('insertHTML', false, '\\' + $(this).attr('title') + ' ');
                                     }
                                     $('#specialchar').remove();
                                     $(editor_Content).data("editor").data("splcharsBtn", null);
@@ -1055,7 +1117,7 @@
 
                 'source': {
                     "text": "Source",
-                    "icon": "fa fa-code",
+                    "icon": "fa fa-file-code-o",
                     "tooltip": "源码模式",
                     "commandname": null,
                     "custom": function (button, params) {
@@ -1070,11 +1132,11 @@
                 'texteffects': ['bold', 'italics', 'underline', 'color'],
                 'aligneffects': ['l_align', 'c_align', 'r_align', 'justify'],
                 'textformats': ['indent', 'outdent', 'block_quote', 'ol', 'ul'],
-                'fonteffects': ['fonts', 'styles', 'font_size'],
                 'actions': ['undo', 'redo'],
+                'fonteffects': ['fonts', 'styles', 'font_size'],
                 'insertoptions': ['insert_link', 'unlink', 'insert_img', 'insert_table'],
-                'extraeffects': ['strikeout', 'hr_line', 'splchars'],
-                'advancedoptions': ['print', 'rm_format', 'select_all', 'insert_html', 'source'],
+                'extraeffects': ['strikeout', 'hr_line'],
+                'advancedoptions': ['print', 'rm_format', 'select_all', 'splchars', 'insert_html', 'source'],
                 'submitaction':['submit']
             };
 
@@ -1089,7 +1151,7 @@
                 'advancedoptions': true,
                 'submitaction': true,
                 'submit': true,
-                'insert_html': true,
+                'insert_html': language,
                 'bold': true,
                 'italics': true,
                 'underline': true,

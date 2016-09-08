@@ -36,17 +36,12 @@ def delete_note():
     db.session.commit()
     return redirect('/')
 
+
 @nazgrim.route('/article')
 def article_list():
     path = os.path.join(MEDIVH_PATH, 'list.json')
     article_list = json.load(open(path))
     return render_template('article/list.html', article_list=article_list)
-
-
-@nazgrim.route('/article/<article_name>/<page_name>')
-def get_page(article_name, page_name):
-    path = os.path.join(MEDIVH_PATH, article_name, 'html', 'pages', page_name)
-    return send_file(path)
 
 
 @nazgrim.route('/article/<article_name>')
@@ -57,11 +52,17 @@ def article(article_name):
     return render_template('article/show.html', text=text)
 
 
-@nazgrim.route('/article/<article_name>/image/<image_name>')
-def article_image(article_name, image_name):
-    return send_file('article/%s/image/%s' % (article_name, image_name))
+@nazgrim.route('/article/<article_name>/<page_name>')
+def get_page(article_name, page_name):
+    path = os.path.join(MEDIVH_PATH, article_name, 'html', 'pages', page_name)
+    return send_file(path)
 
 
 @nazgrim.route('/photo')
 def photo():
     return render_template('photo/list.html')
+
+
+@nazgrim.route('/favicon.ico')
+def favicon():
+    return send_file('./app/static/favicon.ico')

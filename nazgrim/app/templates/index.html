@@ -4,9 +4,11 @@
 <body onload="fadeIn()">
 <script>
     document.getElementById("nav-home").className = "active";
+
     function fadeIn() {
         $('.shadowBox').fadeIn(1000);
     }
+
 </script>
 
 
@@ -33,12 +35,19 @@
                     <h2><span class="glyphicon glyphicon-bookmark"></span></h2>
                     {% endif %}
                 </div>
-                <div class="span2">
+                <div class="span2 slide">
                     {{ note.content | safe }}<br>
-                    <hr>
                 </div>
-                <div align="right" class="span2">
-                    <span class="glyphicon glyphicon-time" aria-hidden="true">{{ note.create_time }}</span>
+                <hr>
+
+                <div class="span2">
+                    <h2 style="display: inline; margin-left: 40%">
+                        <a class="glyphicon glyphicon-chevron-down viewbutton" href="javascipt:void(0);"
+                           style="text-decoration: none"></a>
+                    </h2>
+                    <div style="display: inline; margin-left: 25%"><span class="glyphicon glyphicon-time"
+                                                                         aria-hidden="true">{{ note.create_time }}</span>
+                    </div>
                 </div>
             </div>
             {% endfor %}
@@ -70,8 +79,71 @@
         </div>
     </div>
 </div>
+<script>
+    var min_h = 250;
+
+    var $$ = function (func) {
+        if (document.addEventListener) {
+            window.addEventListener("load", func, false);
+        }
+        else if (document.attachEvent) {
+            window.attachEvent("onload", func);
+        }
+    };
+
+    $$(function () {
+        $(".slide").each(function () {
+            var height = $(this).css("height")
+            height = parseInt(height.substr(0, height.length - 2));
+            if (height > 250) {
+                $(this).css({height: min_h});//折叠
+                $(this).attr("maxHeight", height);
+            }
+            else {
+                $(this).parent().children(".span2").children("h2").children(".viewbutton").hide();
+            }
+        });
+    });
+
+
+    function animate_toggle_height(maxh, minh, element) {
+        var speed = 500;
+        if (element.css("height") == minh.toString().concat("px")) {
+            element.animate({
+                height: maxh
+            }, {queue: false}, speed);
+        }
+        if (element.css("height") == maxh.toString().concat("px")) {
+            $(this).html("");
+            var x = element.offset().left;
+            var y = element.offset().top;
+            window.scrollTo(x, y + 100);
+            element.animate({
+                height: minh
+            }, {queue: false}, speed);
+        }
+    }
+
+    //    $(".slide").css({height: min_h});//设置初始的高度
+    $(".viewbutton").click(function () {//这里只是调用了纵向展开，也可以调用横向展开
+        if ($(this).attr('class').indexOf('glyphicon-chevron-down') != -1) {
+            $(this).attr('class', 'glyphicon glyphicon-chevron-up viewbutton');
+        } else {
+            $(this).attr('class', 'glyphicon glyphicon-chevron-down viewbutton');
+        }
+
+        var max_h = $(this).parent().parent().parent().children(".slide").attr("maxHeight");
+
+        $(this).html(animate_toggle_height(max_h, min_h, $(this).parent().parent().parent().children(".slide"), 500));//自动识别为viewbutton的上一级进行动画
+        return false;
+    });
+</script>
+
+
 </body>
+
 {% endblock %}
+
 
 
 

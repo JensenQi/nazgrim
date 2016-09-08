@@ -1,6 +1,6 @@
 body {
     margin-top: 6%;
-    background-color:rgb(240,240,240);
+    background-color: rgb(240, 240, 240);
     font-family: Microsoft YaHei, YouYuan, SimSun, serif;
 }
 
@@ -13,9 +13,9 @@ body {
     background: white;
     font-size: medium;
     display: none;
-    -moz-border-radius:10px;
-    -webkit-border-radius:10px;
-    border-radius:10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
 }
 
 .shadowBox:hover {
@@ -28,7 +28,6 @@ body {
     color: rgb(120, 120, 120);
 }
 
-
 .note {
     padding: 2% 7% 5% 7%;
     margin: 3% 17% 10% 17%;
@@ -40,15 +39,13 @@ body {
     display: none;
 }
 
-
-.note > p{
+.note > p {
     color: rgb(100, 100, 100);
 }
 
-.note > ol{
+.note > ol {
     color: rgb(100, 100, 100);
 }
-
 
 .alignleft {
     display: inline;
@@ -64,5 +61,14 @@ body {
     clear: both;
     display: block;
     margin: auto;
+}
+
+.slide {
+    overflow: hidden;
+}
+
+.viewbutton {
+    position: relative;
+    text-align: right;
 }
 

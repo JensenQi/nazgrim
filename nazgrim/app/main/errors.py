@@ -9,7 +9,7 @@ import traceback
 def not_found(e):
     exstr = traceback.format_exc()
     print exstr
-    print datetime.now(), request.url, '请求url', request.url, '失败, 返回404'
+    print datetime.now(), request.remote_addr, '请求url', request.url, '失败, 返回404'
     return render_template('error.html', error_code='404'), 404
 
 

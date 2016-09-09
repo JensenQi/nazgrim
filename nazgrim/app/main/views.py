@@ -8,14 +8,22 @@ from ..models import Notes
 import json
 import os
 from datetime import datetime
+import math
 
 MEDIVH_PATH = os.path.abspath('../medivh')
 
 
 @nazgrim.route('/')
 def home():
-    notes = Notes.query.filter_by(status=1).order_by("id desc").all()
-    return render_template('index.html', notes=notes)
+    page = request.args.get('page', default=1, type=int)
+    page_size = 10
+    notes = Notes.query\
+        .filter_by(status=1)\
+        .order_by(Notes.id.desc())\
+        .paginate(page, page_size, error_out=False)\
+        .items
+    max_page = int(math.ceil(1.0 * Notes.query.filter_by(status=1).count() / page_size))
+    return render_template('index.html', notes=notes, page=page, max_page=max_page)
 
 
 @nazgrim.route('/new_note', methods=['Post'])
@@ -25,7 +33,7 @@ def new_note():
     note = Notes(content=content, status=1, create_time=datetime.now())
     db.session.add(note)
     db.session.commit()
-    return render_template('index.html')
+    return redirect('/')
 
 
 @nazgrim.route('/delete_note', methods=['Get'])
@@ -65,4 +73,4 @@ def photo():
 
 @nazgrim.route('/favicon.ico')
 def favicon():
-    return send_file('./app/static/favicon.ico')
+    return send_file('static/favicon.ico')

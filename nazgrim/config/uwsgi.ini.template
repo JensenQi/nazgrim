@@ -21,6 +21,8 @@ callable = app
 # 产生工作进程个数
 processes = 4
 
-#开启线程操作模式
+# 开启线程操作模式
 threads = 2
 
+# 如果因为某些原因，你的web服务器不能处理SCRIPT_NAME，你可以强制uWSGI自动重建PATH_INFO。
+manage-script-name = true

@@ -4,7 +4,8 @@
 nazgrim/venv/
 nazgrim/log/
 
-nazgrim/config.ini
+nazgrim/config/app.ini
+nazgrim/config/uwsgi.ini
+
 nazgrim/config/nginx.conf
 nazgrim/config/supervisor.conf
-nazgrim/config/uwsgi.ini

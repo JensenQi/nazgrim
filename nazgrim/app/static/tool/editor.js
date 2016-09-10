@@ -466,6 +466,9 @@
             var language = [
                 {name:"python", text:"python"},
                 {name:"java", text:"java"},
+                {name:"scala", text:"scala"},
+                {name:"sql", text:"sql"},
+                {name:"css", text:"css"},
                 {name:"shell", text:"shell"},
                 {name:"LaTeX", text:"LaTeX"},
                 {name:"raw", text:"raw"}

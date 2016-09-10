@@ -8,7 +8,7 @@ stdout_logfile=/path/to/git/apps/nazgrim/log/request.log
 
 
 [program:naaru]
-command=uwsgi /path/to/git/apps/nazgrim/config/uwsgi.ini
+command=uwsgi /path/to/git/apps/narru/config/uwsgi.ini
 directory=/path/to/git/apps/naaru
 user=root
 autostart=true

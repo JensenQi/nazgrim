@@ -1,6 +1,6 @@
 [program:nazgrim]
 
-command=uwsgi /path/to/git/apps/nazgrim/config/uwsgi.ini
+command=uwsgi /path/to/git/apps/nazgrim/config/nazgrim_uwsgi.ini
 
 directory=/path/to/git/apps/nazgrim
 user=root
@@ -9,3 +9,14 @@ autostart=true
 autorestart=true
 
 stdout_logfile=/path/to/git/apps/nazgrim/log/request.log
+
+[program:naaru]
+command=uwsgi /path/to/git/apps/nazgrim/config/naaru_uwsgi.ini
+
+directory=/path/to/git/apps/naaru
+user=root
+
+autostart=true
+autorestart=true
+
+stdout_logfile=/path/to/git/apps/naaru/log/request.log

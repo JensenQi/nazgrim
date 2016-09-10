@@ -5,8 +5,15 @@ server {
     location / {
         include      uwsgi_params;
         uwsgi_pass   127.0.0.1:5000;
-        uwsgi_param UWSGI_PYHOME /path/to/git/apps/nazgrim/venv;
-        uwsgi_param UWSGI_CHDIR  /path/to/git/apps/nazgrim;
-        uwsgi_param UWSGI_SCRIPT manage:app;
+        uwsgi_param UWSGI_CHDIR  /path/to/git/apps;
+        uwsgi_param UWSGI_SCRIPT nazgrim/manage:app;
     }
+
+    location /naaru {
+            include      uwsgi_params;
+            uwsgi_pass   127.0.0.1:4546;
+            uwsgi_param UWSGI_CHDIR  /path/to/git/apps;
+            uwsgi_param UWSGI_SCRIPT naaru/manage:app;
+    }
+
 }

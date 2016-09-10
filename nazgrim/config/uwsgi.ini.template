@@ -13,7 +13,7 @@ chdir = /path/to/git/apps/nazgrim
 wsgi-file = manage.py
 
 # 允许同一个进程加载多个app
-mount = / = manage.py
+mount = /=manage.py
 
 # 设置在收到请求时，uWSGI加载的模块中哪个变量将被调用，默认是名字为“application”的变量。
 callable = app

@@ -1,11 +1,14 @@
 .idea
 *.pyc
 
-nazgrim/venv/
-nazgrim/log/
 
 nazgrim/config/app.ini
 nazgrim/config/uwsgi.ini
+nazgrim/log/
 
-nazgrim/config/nginx.conf
-nazgrim/config/supervisor.conf
+naaru/config/app.ini
+naaru/config/uwsgi.ini
+naaru/log/
+
+nginx.conf
+supervisor.conf

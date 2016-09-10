@@ -70,9 +70,9 @@ def get_page(article_name, page_name):
 def photo():
     return render_template('photo/list.html')
 
-@nazgrim.route('/naaru')
-def naaru():
-    return redirect("http://naaru.nazgrim.com", code=302)
+# @nazgrim.route('/naaru')
+# def naaru():
+#     return redirect("http://naaru.nazgrim.com", code=302)
 
 @nazgrim.route('/favicon.ico')
 def favicon():

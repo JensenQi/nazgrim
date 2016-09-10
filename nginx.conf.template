@@ -1,6 +1,6 @@
 server {
     listen  80;
-    server_name fill.your.server.ip
+    server_name nazgrim.com www.nazgrim.com;
 
     location / {
         include      uwsgi_params;
@@ -9,7 +9,13 @@ server {
         uwsgi_param UWSGI_SCRIPT nazgrim/manage:app;
     }
 
-    location /naaru {
+}
+
+server {
+    listen  80;
+    server_name naaru.nazgrim.com;
+
+    location / {
             include      uwsgi_params;
             uwsgi_pass   127.0.0.1:4546;
             uwsgi_param UWSGI_CHDIR  /path/to/git/apps;
@@ -17,3 +23,4 @@ server {
     }
 
 }
+

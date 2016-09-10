@@ -1,8 +1,5 @@
 [uwsgi]
 
-# 开启虚拟主机模式, 多站模式
-vhost = true
-
 # 指定socket文件或者监听的IP
 socket = 127.0.0.1:5000
 
@@ -12,9 +9,6 @@ chdir = /path/to/git/apps/nazgrim
 # 指定加载WSGI文件
 wsgi-file = manage.py
 
-# 允许同一个进程加载多个app
-mount = /=manage.py
-
 # 设置在收到请求时，uWSGI加载的模块中哪个变量将被调用，默认是名字为“application”的变量。
 callable = app
 
@@ -23,6 +17,3 @@ processes = 4
 
 # 开启线程操作模式
 threads = 2
-
-# 如果因为某些原因，你的web服务器不能处理SCRIPT_NAME，你可以强制uWSGI自动重建PATH_INFO。
-manage-script-name = true

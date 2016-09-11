@@ -1,4 +1,3 @@
-from core import engine
-from core.models import BaseModel
+import core
 
-BaseModel.metadata.create_all(engine)
+core.run('master')

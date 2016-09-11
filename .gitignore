@@ -6,9 +6,9 @@ nazgrim/config/app.ini
 nazgrim/config/uwsgi.ini
 nazgrim/log/
 
-naaru/config/app.ini
-naaru/config/uwsgi.ini
-naaru/log/
+chin/config/app.ini
+chin/config/uwsgi.ini
+chin/log/
 
 nginx.conf
 supervisor.conf

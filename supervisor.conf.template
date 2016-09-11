@@ -7,10 +7,10 @@ autorestart=true
 stdout_logfile=/path/to/git/apps/nazgrim/log/request.log
 
 
-[program:naaru]
-command=uwsgi /path/to/git/apps/naaru/config/uwsgi.ini
-directory=/path/to/git/apps/naaru
+[program:chin]
+command=uwsgi /path/to/git/apps/chin/config/uwsgi.ini
+directory=/path/to/git/apps/chin
 user=root
 autostart=true
 autorestart=true
-stdout_logfile=/path/to/git/apps/naaru/log/request.log
+stdout_logfile=/path/to/git/apps/chin/log/request.log

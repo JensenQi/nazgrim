@@ -4,7 +4,7 @@
 socket = 127.0.0.1:4546
 
 # 在失去权限前，使用chdir()到指定目录
-chdir = /path/to/git/apps/naaru
+chdir = /path/to/git/apps/chin
 
 # 指定加载WSGI文件
 wsgi-file = manage.py

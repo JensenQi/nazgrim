@@ -1,5 +1,0 @@
-[db]
-URI = mysql+mysqldb://root:root@localhost/naaru
-
-[secret]
-key = anything_you_want

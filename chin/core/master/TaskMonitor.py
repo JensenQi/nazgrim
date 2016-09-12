@@ -1,8 +1,15 @@
 from ..models import TaskQueue
 
+
 class TaskMonitor:
-    def handdle_timeout(self):
+    def __init__(self):
+        pass
+
+    def serve(self):
+        pass
+
+    def handle_timeout(self):
         return None
 
-    def handdle_faild(self):
+    def handle_failed(self):
         return None

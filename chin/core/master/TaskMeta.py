@@ -1,5 +1,6 @@
 from ..models import Task
 from .. import DBSession
+from VersionController import VersionController
 
 
 class TaskMeta:
@@ -11,6 +12,7 @@ class TaskMeta:
     def add(task):
         session = DBSession()
         session.add(task)
+        VersionController.handle_add(task, session)
         session.commit()
         session.close()
 
@@ -20,6 +22,7 @@ class TaskMeta:
         task = session.query(Task).filter(Task.id == task.id).first()
         task.valid = False
         session.add(task)
+        VersionController.handle_remove(task, session)
         session.commit()
         session.close()
 
@@ -27,5 +30,6 @@ class TaskMeta:
     def update(task):
         session = DBSession()
         session.add(task)
+        VersionController.handle_update(task, session)
         session.commit()
         session.close()

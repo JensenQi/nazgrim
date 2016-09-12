@@ -1,14 +1,24 @@
-from ..models import Task
+from ..models import Task, TaskQueue
 
 class VersionController:
-    def routine(self):
-        return None
 
-    def handdle_add(self):
-        return None
+    def __init__(self):
+        pass
 
-    def handdle_remove(self):
-        return None
+    def serve(self):
+        pass
 
-    def handdle_update(self):
-        return None
+    def init_everyday(self):
+        pass
+
+    @staticmethod
+    def handle_add(task, session):
+        pass
+
+    @staticmethod
+    def handle_remove(task, session):
+        pass
+
+    @staticmethod
+    def handle_update(task, session):
+        pass

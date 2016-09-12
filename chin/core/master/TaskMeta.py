@@ -1,14 +1,31 @@
 from ..models import Task
-from ..models import Task
+from .. import DBSession
 
 
 class TaskMeta:
 
-    def add_task(self):
-        return None
+    def __init__(self):
+        pass
 
-    def remove_task(self):
-        return None
+    @staticmethod
+    def add(task):
+        session = DBSession()
+        session.add(task)
+        session.commit()
+        session.close()
 
-    def update_task(self):
-        return None
+    @staticmethod
+    def remove(task):
+        session = DBSession()
+        task = session.query(Task).filter(Task.id == task.id).first()
+        task.valid = False
+        session.add(task)
+        session.commit()
+        session.close()
+
+    @staticmethod
+    def update(task):
+        session = DBSession()
+        session.add(task)
+        session.commit()
+        session.close()

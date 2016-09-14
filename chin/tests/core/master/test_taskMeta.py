@@ -32,6 +32,7 @@ class TestTaskMeta(TestCase):
                 machine_pool=['data1', 'data2', 'data3'],
                 valid=True,
                 scheduled_type='week',
+                weekday=4,
                 hour=10,
                 minute=0,
                 second=0,

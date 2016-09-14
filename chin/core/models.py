@@ -53,6 +53,7 @@ class Task(BaseModel):
     scheduled_type = Column(Enum('once', 'day', 'week', 'month', 'year'), index=True, doc="调度频率")
     year = Column(SmallInteger, doc="调度时间-年")
     month = Column(SmallInteger, doc="调度时间-月")
+    weekday = Column(SmallInteger, doc="调度时间-周几")
     day = Column(SmallInteger, doc="调度时间-日")
     hour = Column(SmallInteger, doc="调度时间-时")
     minute = Column(SmallInteger, doc="调度时间-分")

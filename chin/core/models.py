@@ -58,6 +58,9 @@ class Task(BaseModel):
     minute = Column(SmallInteger, doc="调度时间-分")
     second = Column(SmallInteger, doc="调度时间-秒")
 
+    def __repr__(self):
+        return '<Task %s>' % self.id
+
 
 class TaskQueue(BaseModel):
     def fields(self, id=Column(Integer, primary_key=True, doc="日志id"),
@@ -77,3 +80,6 @@ class TaskQueue(BaseModel):
     begin_time = Column(DateTime, doc='开始执行时间')
     finish_time = Column(DateTime, doc='执行结束时间')
     status = Column(Enum('waiting', 'running', 'failed', 'killing', 'repairing'), index=True, doc='状态')
+
+    def __repr__(self):
+        return '<TaskQueue %s>' % self.id

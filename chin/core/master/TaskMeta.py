@@ -1,8 +1,8 @@
 from ..models import Task
 from VersionController import VersionController
 
-class TaskMeta:
 
+class TaskMeta:
     def __init__(self):
         pass
 

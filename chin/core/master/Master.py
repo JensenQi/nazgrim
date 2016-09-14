@@ -2,6 +2,7 @@ from TaskMeta import TaskMeta
 from TaskDistributor import TaskDistributor
 from TaskMonitor import TaskMonitor
 from VersionController import VersionController
+from .. import DBSession
 
 
 class Master:
@@ -18,15 +19,22 @@ class Master:
     @staticmethod
     def add_task():
         task = None
-        TaskMeta.add(task)
+        session = DBSession()
+        TaskMeta.add(task, session)
+        session.close()
 
     @staticmethod
     def remove_task():
         task = None
-        TaskMeta.remove(task)
+        session = DBSession()
+        TaskMeta.remove(task, session)
+        session.close()
 
     @staticmethod
     def update_task():
         task = None
-        TaskMeta.update(task)
+        session = DBSession()
+        TaskMeta.update(task, session)
+        session.close()
+
         

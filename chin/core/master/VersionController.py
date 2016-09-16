@@ -9,10 +9,13 @@ from .. import DBSession
 
 class VersionController:
     def __init__(self):
+        self.date = None
+        self.serve_thread = Thread(target=self._scan)
+        self.serve_thread.setDaemon(True)
         self.scan_span = 2
 
     def _scan(self):
-        while self.is_serving:
+        while True:
             cur_date = datetime.date(datetime.now())
             if self.date != cur_date:
                 self.date = cur_date
@@ -20,45 +23,15 @@ class VersionController:
             print cur_date
             time.sleep(self.scan_span)
 
-    def _start(self):
-        self.date = None
-        self.is_serving = True
-        self.serve_thread = Thread(target=self._scan)
+    def serve(self):
         logger.info('Version Controller 开始服务')
         self.serve_thread.start()
 
-    def _stop(self):
-        self.is_serving = False
-        logger.info('Version Controller 服务正在关闭...')
-        time.sleep(self.scan_span * 2)
-        if self.serve_thread.isAlive():
-            info = "Version Controller在is_serving置False后两个扫描周期没没有关闭"
-            logger.error(info)
-            raise Exception(info)
-        else:
-            logger.info('Version Controller 服务已关闭')
-
-    def _restart(self):
-        logger.info('Version Controller 服务重启...')
-        self._stop()
-        self._start()
-
-    def serve(self, action='start'):
-        if action == 'start':
-            self._start()
-        elif action == 'stop':
-            self._stop()
-        elif action == 'restart':
-            self._restart()
-        else:
-            info = 'Version Controller只支持start/stop/restart, 不支持%s操作' % action
-            logger.error(info)
-            raise Exception(info)
+    def is_live(self):
+        return self.serve_thread.isAlive()
 
     def init(self):
-
         def append_queue(sess, task_id, task_version):
-            queue = session.query(TaskQueue).filter_by(task_id=task_id, version=task_version).all()
             item_is_not_exist = session.query(TaskQueue).filter_by(task_id=task_id, version=task_version).all() == []
             if item_is_not_exist:
                 sess.add(TaskQueue(task_id=task_id, version=task_version))

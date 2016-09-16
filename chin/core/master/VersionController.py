@@ -18,9 +18,9 @@ class VersionController:
         while True:
             cur_date = datetime.date(datetime.now())
             if self.date != cur_date:
+                logger.info('历史日期=%s, 当前日期=%s, 版本号例行初始化' % (self.date, cur_date))
                 self.date = cur_date
                 self.init()
-            print cur_date
             time.sleep(self.scan_span)
 
     def serve(self):

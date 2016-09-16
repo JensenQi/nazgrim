@@ -45,42 +45,46 @@ class Task(BaseModel):
     # 执行相关
     command = Column(Text, doc="任务执行命令")
     args = Column(Text, doc="任务执行参数")
-    priority = Column(SmallInteger, doc="任务优先级")
+    priority = Column(SmallInteger, default=0, doc="任务优先级")
     machine_pool = Column(Json, doc="机器池list")
 
     # 调度相关
-    valid = Column(Boolean, index=True, doc="是否调度")
+    valid = Column(Boolean, index=True, default=False, doc="是否调度")
     scheduled_type = Column(Enum('once', 'day', 'week', 'month', 'year'), index=True, doc="调度频率")
     year = Column(SmallInteger, doc="调度时间-年")
     month = Column(SmallInteger, doc="调度时间-月")
     weekday = Column(SmallInteger, doc="调度时间-周几")
     day = Column(SmallInteger, doc="调度时间-日")
     hour = Column(SmallInteger, doc="调度时间-时")
-    minute = Column(SmallInteger, doc="调度时间-分")
-    second = Column(SmallInteger, doc="调度时间-秒")
+    minute = Column(SmallInteger, default=0, doc="调度时间-分")
+    second = Column(SmallInteger, default=0, doc="调度时间-秒")
 
     def __repr__(self):
         return '<Task %s>' % self.id
 
 
 class TaskQueue(BaseModel):
-    def fields(self, id=Column(Integer, primary_key=True, doc="日志id"),
-               task_id=Column(Integer, ForeignKey('task.id'), doc='任务id'),
-               version=Column(String(14), doc='版本号'),
-               pooled_time=Column(DateTime, doc='入池时间'),
-               begin_time=Column(DateTime, doc='开始执行时间'),
-               finish_time=Column(DateTime, doc='执行结束时间'),
-               status=Column(Enum('waiting', 'running', 'failed', 'killing', 'repairing'), index=True, doc='状态')): pass
+    def fields(
+        self, id=Column(Integer, primary_key=True, doc="日志id"),
+        task_id=Column(Integer, ForeignKey('task.id'), doc='任务id'),
+        version=Column(String(14), doc='版本号'),
+        execute_machine=Column(String(32), doc='执行机器'),
+        pooled_time=Column(DateTime, doc='入池时间'),
+        begin_time=Column(DateTime, doc='开始执行时间'),
+        finish_time=Column(DateTime, doc='执行结束时间'),
+        status=Column(Enum('waiting', 'abandon', 'running', 'failed', 'killing', 'repairing'), index=True, doc='状态')
+    ): pass
 
     __tablename__ = 'task_queue'
 
     id = Column(Integer, primary_key=True, doc="日志id")
     task_id = Column(Integer, ForeignKey('task.id'), doc='任务id')
     version = Column(String(14), doc='版本号')
+    execute_machine = Column(String(32), doc='执行机器')
     pooled_time = Column(DateTime, doc='入池时间')
     begin_time = Column(DateTime, doc='开始执行时间')
     finish_time = Column(DateTime, doc='执行结束时间')
-    status = Column(Enum('waiting', 'running', 'failed', 'killing', 'repairing'), index=True, doc='状态')
+    status = Column(Enum('waiting', 'abandon', 'running', 'failed', 'killing', 'repairing'), index=True, doc='状态')
 
     def __repr__(self):
         return '<TaskQueue %s>' % self.id

@@ -47,13 +47,13 @@ class VersionController:
                 if task.weekday == self.date.isoweekday():
                     append_queue(session, task.id, version)
             elif task.scheduled_type == 'month':
-                if task.day == self.date.day():
+                if task.day == self.date.day:
                     append_queue(session, task.id, version)
             elif task.scheduled_type == 'year':
-                if task.day == self.date.day() and task.month == self.date.month():
+                if task.day == self.date.day and task.month == self.date.month:
                     append_queue(session, task.id, version)
             elif task.scheduled_type == 'once':
-                if datetime(task.day, task.month, task.day) == self.date:
+                if datetime(task.year, task.month, task.day).date() == self.date:
                     append_queue(session, task.id, version)
             else:
                 session.commit()

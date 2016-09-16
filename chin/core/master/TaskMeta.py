@@ -7,21 +7,31 @@ class TaskMeta:
         pass
 
     @staticmethod
-    def add(task, session):
-        session.add(task)
-        VersionController.handle_add(task, session)
-        session.commit()
+    def add(task):
+        return Deal('add', task)
 
     @staticmethod
-    def remove(task, session):
-        task = session.query(Task).filter(Task.id == task.id).first()
-        task.valid = False
-        session.add(task)
-        VersionController.handle_remove(task, session)
-        session.commit()
+    def remove(task):
+        return Deal('remove', task)
 
     @staticmethod
-    def update(task, session):
-        session.add(task)
-        VersionController.handle_update(task, session)
+    def update(task):
+        return Deal('update', task)
+
+
+class Deal:
+    def __init__(self, action, task):
+        self.task = task
+        self.action = action
+
+    def by(self, session):
+        if self.action == 'add':
+            VersionController.handle_add(self.task, session)
+        if self.action == 'remove':
+            self.task = session.query(Task).filter(Task.id == self.task.id).first()
+            self.task.valid = False
+            VersionController.handle_remove(self.task, session)
+        if self.action == 'update':
+            VersionController.handle_update(self.task, session)
+        session.add(self.task)
         session.commit()

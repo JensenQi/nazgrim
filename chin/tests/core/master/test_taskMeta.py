@@ -7,6 +7,8 @@ from core.master.TaskMeta import TaskMeta
 from core.models import Task
 from datetime import datetime
 from core import DBSession
+from core import engine
+from core import BaseModel
 
 
 class TestTaskMeta(TestCase):
@@ -39,26 +41,28 @@ class TestTaskMeta(TestCase):
                 priority=10,
         )
         self.session = DBSession()
+        BaseModel.metadata.drop_all(engine)
+        BaseModel.metadata.create_all(engine)
 
     def tearDown(self):
         self.session.close()
 
     def test_add(self):
         self.assertTrue(self.python_task.id is None)
-        TaskMeta.add(self.python_task, self.session)
+        TaskMeta.add(self.python_task).by(self.session)
         self.assertTrue(self.python_task.id is not None)
 
         self.assertTrue(self.shell_task.id is None)
-        TaskMeta.add(self.shell_task, self.session)
+        TaskMeta.add(self.shell_task).by(self.session)
         self.assertTrue(self.shell_task.id is not None)
 
         self.assertEqual(self.python_task.id + 1, self.shell_task.id)
 
     def test_remove(self):
         valid_count_pre = self.session.query(Task).filter_by(valid=True).count()
-        TaskMeta.add(self.python_task, self.session)
+        TaskMeta.add(self.python_task).by(self.session)
         valid_count_mid = self.session.query(Task).filter_by(valid=True).count()
-        TaskMeta.remove(self.python_task, self.session)
+        TaskMeta.remove(self.python_task).by(self.session)
         valid_count_post = self.session.query(Task).filter_by(valid=True).count()
 
         self.assertEqual(valid_count_pre + 1, valid_count_mid)

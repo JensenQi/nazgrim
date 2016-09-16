@@ -17,7 +17,7 @@ class Master:
         self.task_distributor.serve()
         self.task_monitor.serve()
         while True:
-            print time.time(),self.version_controller.is_live()
+            print time.time(),self.version_controller.is_live(), self.task_distributor.is_live()
             time.sleep(1)
 
     @staticmethod

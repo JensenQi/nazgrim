@@ -1,3 +1,4 @@
+# coding=utf-8
 from ..models import Task
 from VersionController import VersionController
 
@@ -25,6 +26,7 @@ class Deal:
         self.action = action
 
     def by(self, session):
+        # todo: 边界检测
         if self.action == 'add':
             VersionController.handle_add(self.task, session)
         if self.action == 'remove':

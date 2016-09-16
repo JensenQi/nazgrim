@@ -1,15 +1,32 @@
+# coding=utf-8
 from ..models import TaskQueue
+from threading import Thread
+import time
+from . import logger
 
 
 class TaskMonitor:
     def __init__(self):
-        pass
+        self.serve_thread = Thread(target=self._scan)
+        self.serve_thread.setDaemon(True)
+        self.scan_span = 2
+
+    def _scan(self):
+        while True:
+            # todo: 扫描逻辑
+            time.sleep(self.scan_span)
 
     def serve(self):
-        pass
+        logger.info('Task Monitor 开始服务')
+        self.serve_thread.start()
 
-    def handle_timeout(self):
+    def is_live(self):
+        return self.serve_thread.isAlive()
+
+    @staticmethod
+    def handle_timeout():
         return None
 
-    def handle_failed(self):
+    @staticmethod
+    def handle_failed():
         return None

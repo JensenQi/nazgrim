@@ -1,14 +1,10 @@
-### medivh
-麦迪文,存放长篇文章
+### medivh(这东西不需要开发) 存放长篇文章的LaTeX源码
 
-### mograine
-莫格莱尼, 调度器
+### nazgrim  web server(第一版开发完毕), 域名：nazgrim.com
 
-### nazgrim
-纳兹戈林, web server, 域名：nazgrim.com   
+### chin 调度器(开发中), 域名：chin.nazgrim.com
     
-### vancleef
-范克里夫, 爬虫
+### vancleef 爬虫(待开发)
 
  
 

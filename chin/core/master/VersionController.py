@@ -16,7 +16,7 @@ class VersionController:
             cur_date = datetime.date(datetime.now())
             if self.date != cur_date:
                 self.date = cur_date
-                self.init_everyday()
+                self.init()
             print cur_date
             time.sleep(self.scan_span)
 
@@ -55,28 +55,39 @@ class VersionController:
             logger.error(info)
             raise Exception(info)
 
-    def init_everyday(self):
+    def init(self):
+
+        def append_queue(sess, task_id, task_version):
+            queue = session.query(TaskQueue).filter_by(task_id=task_id, version=task_version).all()
+            item_is_not_exist = session.query(TaskQueue).filter_by(task_id=task_id, version=task_version).all() == []
+            if item_is_not_exist:
+                sess.add(TaskQueue(task_id=task_id, version=task_version))
+
         session = DBSession()
         valid_tasks = session.query(Task).filter_by(valid=True).all()
         for task in valid_tasks:
-            version = datetime(self.date.year, self.date.month, self.date.day, task.hour, task.minute, task.second).strftime('%Y%m%d%H%M%S')
+            version = datetime(self.date.year, self.date.month, self.date.day, task.hour, task.minute,
+                               task.second).strftime('%Y%m%d%H%M%S')
             if task.scheduled_type == 'day':
-                session.add(TaskQueue(task_id=task.id, version=version))
+                append_queue(session, task.id, version)
             elif task.scheduled_type == 'week':
-                if task.weekday == self.date.isoweekday(): session.add(TaskQueue(task_id=task.id, version=version))
+                if task.weekday == self.date.isoweekday():
+                    append_queue(session, task.id, version)
             elif task.scheduled_type == 'month':
-                if task.day == self.date.day(): session.add(TaskQueue(task_id=task.id, version=version))
+                if task.day == self.date.day():
+                    append_queue(session, task.id, version)
             elif task.scheduled_type == 'year':
-                if task.day == self.date.day() and task.month == self.date.month(): session.add(TaskQueue(task_id=task.id, version=version))
+                if task.day == self.date.day() and task.month == self.date.month():
+                    append_queue(session, task.id, version)
             elif task.scheduled_type == 'once':
-                if datetime(task.day, task.month, task.day) == self.date: session.add(TaskQueue(task_id=task.id, version=version))
+                if datetime(task.day, task.month, task.day) == self.date:
+                    append_queue(session, task.id, version)
             else:
                 session.commit()
                 session.close()
                 raise Exception('不支持的调度周期%s' % task.scheduled_type)
         session.commit()
         session.close()
-
 
     @staticmethod
     def handle_add(task, session):

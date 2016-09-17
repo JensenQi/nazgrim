@@ -21,11 +21,11 @@ class TaskDistributor:
             now = datetime.now().strftime("%Y%m%d%H%M%S")
             session = DBSession()
 
-            # 处理未分配机器的
+            # 处理未分配机器的 注意:filter只能用==None不能用is None
             undistributed_tasks = session.query(TaskQueue) \
                 .filter(TaskQueue.version >= midnight) \
                 .filter(TaskQueue.version <= now) \
-                .filter(TaskQueue.status is None) \
+                .filter(TaskQueue.status == None) \
                 .all()
 
             for task in undistributed_tasks:

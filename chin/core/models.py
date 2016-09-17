@@ -26,6 +26,8 @@ class Task(BaseModel):
                priority=Column(SmallInteger, doc="任务优先级"),
                machine_pool=Column(Json, doc="机器池list"),
                valid=Column(Boolean, index=True, doc="是否调度"),
+               rerun=Column(Boolean, index=True, default=False, doc="当失败时是否自动重新执行"),
+               rerun_times=Column(SmallInteger, default=0, doc="重新执行次数"),
                scheduled_type=Column(Enum('once', 'day', 'week', 'month', 'year'), index=True, doc="调度频率"),
                year=Column(SmallInteger, doc="调度时间-年"),
                month=Column(SmallInteger, doc="调度时间-月"),
@@ -50,6 +52,8 @@ class Task(BaseModel):
 
     # 调度相关
     valid = Column(Boolean, index=True, default=False, doc="是否调度")
+    rerun = Column(Boolean, index=True, default=False, doc="当失败时是否自动重新执行")
+    rerun_times = Column(SmallInteger, default=0, doc="重新执行次数")
     scheduled_type = Column(Enum('once', 'day', 'week', 'month', 'year'), index=True, doc="调度频率")
     year = Column(SmallInteger, doc="调度时间-年")
     month = Column(SmallInteger, doc="调度时间-月")
@@ -65,14 +69,14 @@ class Task(BaseModel):
 
 class TaskQueue(BaseModel):
     def fields(
-        self, id=Column(Integer, primary_key=True, doc="日志id"),
-        task_id=Column(Integer, ForeignKey('task.id'), doc='任务id'),
-        version=Column(String(14), doc='版本号'),
-        execute_machine=Column(String(32), doc='执行机器'),
-        pooled_time=Column(DateTime, doc='入池时间'),
-        begin_time=Column(DateTime, doc='开始执行时间'),
-        finish_time=Column(DateTime, doc='执行结束时间'),
-        status=Column(Enum('waiting', 'abandon', 'running', 'failed', 'killing', 'repairing'), index=True, doc='状态')
+            self, id=Column(Integer, primary_key=True, doc="日志id"),
+            task_id=Column(Integer, ForeignKey('task.id'), doc='任务id'),
+            version=Column(String(14), doc='版本号'),
+            execute_machine=Column(String(32), doc='执行机器'),
+            pooled_time=Column(DateTime, doc='入池时间'),
+            begin_time=Column(DateTime, doc='开始执行时间'),
+            finish_time=Column(DateTime, doc='执行结束时间'),
+            status=Column(Enum('waiting', 'abandon', 'running', 'failed', 'killing', 'repairing'), index=True, doc='状态')
     ): pass
 
     __tablename__ = 'task_queue'

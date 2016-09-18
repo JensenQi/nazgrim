@@ -17,28 +17,23 @@ class Master:
         self.task_distributor.serve()
         self.task_monitor.serve()
         while True:
-            print time.time(),self.version_controller.is_live(), self.task_distributor.is_live()
+            print time.time(), self.version_controller.is_live(), self.task_distributor.is_live()
             time.sleep(1)
 
     @staticmethod
-    def add_task():
-        task = None
+    def add(task):
         session = DBSession()
-        TaskMeta.add(task, session)
+        TaskMeta.add(task).by(session)
         session.close()
 
     @staticmethod
-    def remove_task():
-        task = None
+    def remove(task):
         session = DBSession()
-        TaskMeta.remove(task, session)
+        TaskMeta.remove(task).by(session)
         session.close()
 
     @staticmethod
-    def update_task():
-        task = None
+    def update_task(task):
         session = DBSession()
-        TaskMeta.update(task, session)
+        TaskMeta.update(task).by(session)
         session.close()
-
-        

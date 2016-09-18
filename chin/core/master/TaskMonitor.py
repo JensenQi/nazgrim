@@ -25,8 +25,12 @@ class TaskMonitor:
 
     @staticmethod
     def handle_timeout():
-        return None
+        pass
 
     @staticmethod
     def handle_failed():
-        return None
+        pass
+
+    @staticmethod
+    def kill(task):
+        pass

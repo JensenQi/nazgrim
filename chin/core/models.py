@@ -89,8 +89,27 @@ class TaskQueue(BaseModel):
     pooled_time = Column(DateTime, doc='入池时间')
     begin_time = Column(DateTime, doc='开始执行时间')
     finish_time = Column(DateTime, doc='执行结束时间')
-    run_count=Column(SmallInteger, default=0, doc="执行次数")
+    run_count = Column(SmallInteger, default=0, doc="执行次数")
     status = Column(Enum('waiting', 'abandon', 'running', 'failed', 'killing', 'repairing'), index=True, doc='状态')
 
     def __repr__(self):
         return '<TaskQueue %s>' % self.id
+
+
+class SlaveMachine(BaseModel):
+    __tablename__ = 'slave_machine'
+
+    def fields(self, id=Column(Integer, primary_key=True, doc="机器id"),
+               name=Column(String(32), unique=True, doc="机器名"),
+               cpu=Column(SmallInteger, doc="CPU使用率"),
+               memory=Column(SmallInteger, doc="内存使用率"),
+               disk=Column(SmallInteger, doc="硬盘使用率"),
+               last_heartbeat=Column(DateTime, doc='最后一次心跳时间')
+    ): pass
+
+    id = Column(Integer, primary_key=True, doc="机器id")
+    name = Column(String(32), unique=True, doc="机器名")
+    cpu = Column(SmallInteger, doc="CPU使用率")
+    memory = Column(SmallInteger, doc="内存使用率")
+    disk = Column(SmallInteger, doc="硬盘使用率")
+    last_heartbeat = Column(DateTime, doc='最后一次心跳时间')

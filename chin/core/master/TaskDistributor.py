@@ -16,7 +16,6 @@ class TaskDistributor:
 
     def _scan(self):
         while True:
-            # todo: 扫描逻辑
             midnight = datetime.date(datetime.now()).strftime("%Y%m%d%H%M%S")
             now = datetime.now().strftime("%Y%m%d%H%M%S")
             session = DBSession()
@@ -45,8 +44,8 @@ class TaskDistributor:
                 .all()
 
             for task in failed_tasks:
-                task_meta = session.query(Task).filter_by(id=task.task_id).fitst()
-                if task_meta.rerun is True and task.run_count < task_meta.rerun_count + 1:
+                task_meta = session.query(Task).filter_by(id=task.task_id).first()
+                if task_meta.rerun is True and task.run_count < task_meta.rerun_times + 1:
                     # todo: 失败机器切换
                     task.execute_machine = choice(task_meta.machine_pool)
                     task.status = 'waiting'

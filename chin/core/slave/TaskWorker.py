@@ -15,7 +15,7 @@ class Shell:
         self.task_id = task_id
         self.version = version
         now = datetime.now().strftime('%Y%m%d%H%M%S')
-        self.log = open('{}_{}_{}.log'.format(self.task_id, self.version, now), 'w')
+        self.log = open('logs/{}_{}_{}.log'.format(self.task_id, self.version, now), 'w')
 
     def run(self):
         self._process = Popen(self.command, shell=True, stdout=self.log, stderr=self.log)
@@ -31,11 +31,11 @@ class Shell:
 
 
 class TaskWorker:
-    def __init__(self):
+    def __init__(self, name):
         self.serve_thread = Thread(target=self._scan)
         self.serve_thread.setDaemon(True)
         self.scan_span = 2
-        self.name = None
+        self.name = name
         self.running_tasks = []
 
     def _scan(self):

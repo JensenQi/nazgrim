@@ -28,7 +28,7 @@ class TaskMonitor:
         pass
 
     @staticmethod
-    def handle_failed():
+    def handle_failed(task_id, version):
         pass
 
     @staticmethod

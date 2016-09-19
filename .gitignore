@@ -8,7 +8,7 @@ nazgrim/log/
 
 chin/config/app.ini
 chin/config/uwsgi.ini
-chin/log/
+chin/logs/
 
 nginx.conf
 supervisor.conf

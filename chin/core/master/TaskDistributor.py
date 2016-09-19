@@ -34,6 +34,7 @@ class TaskDistributor:
                 task.pooled_time = datetime.now()
                 task.run_count += 1
                 task.status = 'waiting'
+                task.pooled_time = datetime.now()
                 session.add(task)
 
             # 处理放弃/执行失败的
@@ -49,6 +50,7 @@ class TaskDistributor:
                     # todo: 失败机器切换
                     task.execute_machine = choice(task_meta.machine_pool)
                     task.status = 'waiting'
+                    task.pooled_time = datetime.now()
                     task.run_count += 1
                     session.add(task)
 

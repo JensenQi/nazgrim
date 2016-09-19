@@ -77,7 +77,7 @@ class TaskQueue(BaseModel):
             begin_time=Column(DateTime, doc='开始执行时间'),
             finish_time=Column(DateTime, doc='执行结束时间'),
             run_count=Column(SmallInteger, default=0, doc="执行次数"),
-            status=Column(Enum('waiting', 'abandon', 'running', 'failed', 'killing', 'repairing'), index=True, doc='状态')
+            status=Column(Enum('waiting', 'abandon', 'running', 'finish', 'failed', 'killing', 'repairing'), index=True, doc='状态')
     ): pass
 
     __tablename__ = 'task_queue'
@@ -90,7 +90,7 @@ class TaskQueue(BaseModel):
     begin_time = Column(DateTime, doc='开始执行时间')
     finish_time = Column(DateTime, doc='执行结束时间')
     run_count = Column(SmallInteger, default=0, doc="执行次数")
-    status = Column(Enum('waiting', 'abandon', 'running', 'failed', 'killing', 'repairing'), index=True, doc='状态')
+    status = Column(Enum('waiting', 'abandon', 'running', 'finish', 'failed', 'killing', 'repairing'), index=True, doc='状态')
 
     def __repr__(self):
         return '<TaskQueue %s>' % self.id

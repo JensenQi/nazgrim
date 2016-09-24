@@ -109,6 +109,7 @@ class SlaveMachine(BaseModel):
 
     id = Column(Integer, primary_key=True, doc="机器id")
     name = Column(String(32), unique=True, doc="机器名")
+    ip = Column(String(15), doc='机器当前ip')
     cpu = Column(SmallInteger, doc="CPU使用率")
     memory = Column(SmallInteger, doc="内存使用率")
     disk = Column(SmallInteger, doc="硬盘使用率")

@@ -17,13 +17,10 @@ class Master:
         self.version_controller.serve()
         self.task_distributor.serve()
         self.task_monitor.serve()
-        while True:
-            all_is_live = self.version_controller.is_live() and \
-                          self.task_distributor.is_live() and \
-                          self.task_monitor.is_live()
-            if not all_is_live:
-                raise Exception('守护线程死亡')
-            time.sleep(1)
+
+    def is_live(self):
+        return self.version_controller.is_live() and self.task_distributor.is_live() \
+               and self.task_monitor.is_live()
 
     @staticmethod
     def add(task):

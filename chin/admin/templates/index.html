@@ -1,5 +1,23 @@
 {% extends 'base/layout.html' %}
 
+{% block search %}
+<div class="navbar-form navbar-left">
+    <div class="input-group">
+        <input type="text" class="form-control" onkeydown="onKeyDown()">
+        <div class="input-group-btn">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">任务id <span class="caret"></span></button>
+            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                <li><a href="#">任务id</a></li>
+                <li><a href="#">任务名</a></li>
+                <li><a href="#">启动命令</a></li>
+                <li><a href="#">创建者</a></li>
+                <li><a href="#">可执行机器</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
 {% block body %}
 
 

@@ -1,9 +1,10 @@
 from . import admin
+from flask import render_template
 
 
 @admin.route('/')
 def home():
-    return '<h1>Welcome to Chin</h1><br><a href="/login">login</a>'
+    return render_template('index.html')
 
 @admin.route('/login')
 def login():

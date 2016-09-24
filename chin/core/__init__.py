@@ -14,17 +14,14 @@ from slave.TaskWorker import TaskWorker
 
 def run(role):
     BaseModel.metadata.create_all(engine)
-    server = None
-    if role is 'master':
+    if role == 'master':
         server = Master()
-    elif role is 'slave':
+    elif role == 'slave':
         server = TaskWorker(MACHINE_NAME)
     else:
-        print '只支持master和slave参数'
+        raise Exception('只支持master和slave参数')
     server.serve()
     while True:
         if not server.is_live():
             raise Exception('%s 守护线程已死亡' % type(server))
-        else:
-            print time.time()
         time.sleep(1)

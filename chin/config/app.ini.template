@@ -3,3 +3,6 @@ URI = mysql+mysqldb://root:root@localhost/chin
 
 [secret]
 key = anything_you_want
+
+[machine]
+name = data_1

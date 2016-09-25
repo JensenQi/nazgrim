@@ -25,11 +25,11 @@
 
         <div class="col-md-10">
             {% block body %}{% endblock %}
+            {% include 'base/footer.html' ignore missing %}
         </div>
     </div>
 </div>
 {% block footer %}
-{% include 'base/footer.html' ignore missing %}
 {% endblock %}
 
 

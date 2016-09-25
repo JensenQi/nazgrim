@@ -1,102 +1,108 @@
 {% extends 'base/layout.html' %}
 
 
-{% block search %}
-<div class="navbar-form navbar-left">
-    <div class="input-group">
-        <input type="text" class="form-control" onkeydown="onKeyDown()">
-        <div class="input-group-btn">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">任务id <span class="caret"></span></button>
-            <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                <li><a href="#">任务id</a></li>
-                <li><a href="#">状态</a></li>
-                <li><a href="#">执行机器</a></li>
-            </ul>
+{% block body %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="input-group">
+            <input type="text" class="form-control" onkeydown="onKeyDown()">
+            <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    任务id <span
+                        class="caret"></span></button>
+                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                    <li><a href="#">任务id</a></li>
+                    <li><a href="#">状态</a></li>
+                    <li><a href="#">执行机器</a></li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
-{% endblock %}
+<hr>
 
 
+<table class="table table-hover table-striped" style="box-shadow: 10px 10px 5px #888888">
+    <thead>
+    <tr>
+        <th width="10%">任务id</th>
+        <th width="10%">版本号</th>
+        <th width="25%">任务名</th>
+        <th width="10%">执行机器</th>
+        <th width="10%">入池时间</th>
+        <th width="10%">开始时间</th>
+        <th width="10%">结束时间</th>
+        <th width="5%">状态</th>
+        <th width="15%">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>10</td>
+        <td>20160101001000</td>
+        <td title="python jd_source.py">京东日常数据抽取[source]</td>
+        <td> slave_1</td>
+        <td title="day">2016-01-01 00:10:00</td>
+        <td title="day">2016-01-01 00:10:00</td>
+        <td title="day">2016-01-01 00:10:00</td>
+        <td>
+            <span class="glyphicon glyphicon-ok"></span>
+        </td>
+        <td>
+            <a title="重新执行"><span class="glyphicon glyphicon-repeat"></span></a>&nbsp;&nbsp;
+            <a title="kill"><span class="glyphicon glyphicon-stop"></span></a>
+        </td>
+    </tr>
 
-{% block body %}
-
-
-
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <table class="table table-hover table-striped">
-                <thead>
-                <tr>
-                    <th width="5%">任务id</th>
-                    <th width="10%">版本号</th>
-                    <th width="30%">任务名</th>
-                    <th width="10%">执行机器</th>
-                    <th width="10%">入池时间</th>
-                    <th width="10%">开始时间</th>
-                    <th width="10%">结束时间</th>
-                    <th width="5%">状态</th>
-                    <th width="10%">操作</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>10</td>
-                    <td>20160101001000</td>
-                    <td title="python jd_source.py">京东日常数据抽取[source]</td>
-                    <td> slave_1</td>
-                    <td title="day">2016-01-01 00:10:00</td>
-                    <td title="day">2016-01-01 00:10:00</td>
-                    <td title="day">2016-01-01 00:10:00</td>
-                    <td>
-                        <span class="glyphicon glyphicon-ok"></span>
-                    </td>
-                    <td>
-                        <a title="重新执行"><span class="glyphicon glyphicon-repeat"></span></a>&nbsp;&nbsp;
-                        <a title="kill"><span class="glyphicon glyphicon-stop"></span></a>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>11</td>
-                    <td>20160101001000</td>
-                    <td title="python jd_transform.py">京东日常数据抽取[transform]</td>
-                    <td> slave_1</td>
-                    <td title="day">2016-01-01 00:10:00</td>
-                    <td title="day">2016-01-01 00:10:00</td>
-                    <td title="day">2016-01-01 00:10:00</td>
-                    <td>
-                        <span class="glyphicon glyphicon-refresh"></span>
-                    </td>
-                    <td>
-                        <a title="重新执行"><span class="glyphicon glyphicon-repeat"></span></a>&nbsp;&nbsp;
-                        <a title="kill"><span class="glyphicon glyphicon-stop"></span></a>
-                    </td>
-                </tr>
+    <tr>
+        <td>11</td>
+        <td>20160101001000</td>
+        <td title="python jd_transform.py">京东日常数据抽取[transform]</td>
+        <td> slave_1</td>
+        <td title="day">2016-01-01 00:10:00</td>
+        <td title="day">2016-01-01 00:10:00</td>
+        <td title="day">2016-01-01 00:10:00</td>
+        <td>
+            <span class="glyphicon glyphicon-refresh"></span>
+        </td>
+        <td>
+            <a title="重新执行"><span class="glyphicon glyphicon-repeat"></span></a>&nbsp;&nbsp;
+            <a title="kill"><span class="glyphicon glyphicon-stop"></span></a>
+        </td>
+    </tr>
 
 
-                <tr>
-                    <td>12</td>
-                    <td>20160101001000</td>
-                    <td title="python jd_subject.py">京东日常数据抽取[subject]</td>
-                    <td> slave_1</td>
-                    <td title="day">2016-01-01 00:10:00</td>
-                    <td title="day">2016-01-01 00:10:00</td>
-                    <td title="day">2016-01-01 00:10:00</td>
-                    <td>
-                        <span class="glyphicon glyphicon-remove"></span>
-                    </td>
-                    <td>
-                        <a title="重新执行"><span class="glyphicon glyphicon-repeat"></span></a>&nbsp;&nbsp;
-                        <a title="kill"><span class="glyphicon glyphicon-stop"></span></a>
-                    </td>
-                </tr>
+    <tr>
+        <td>12</td>
+        <td>20160101001000</td>
+        <td title="python jd_subject.py">京东日常数据抽取[subject]</td>
+        <td> slave_1</td>
+        <td title="day">2016-01-01 00:10:00</td>
+        <td title="day">2016-01-01 00:10:00</td>
+        <td title="day">2016-01-01 00:10:00</td>
+        <td>
+            <span class="glyphicon glyphicon-remove"></span>
+        </td>
+        <td>
+            <a title="重新执行"><span class="glyphicon glyphicon-repeat"></span></a>&nbsp;&nbsp;
+            <a title="kill"><span class="glyphicon glyphicon-stop"></span></a>
+        </td>
+    </tr>
 
 
-                </tbody>
-            </table>
-        </div>
-    </div>
+    </tbody>
+</table>
+<div align="center">
+    <nav>
+        <ul class="pagination">
+            <li><a href="#">&laquo;</a></li>
+            <li><a href="#">1</a></li>
+            <li><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+            <li><a href="#">5</a></li>
+            <li><a href="#">&raquo;</a></li>
+        </ul>
+    </nav>
 </div>
 {% endblock %}

@@ -1,26 +1,10 @@
 {% extends 'base/layout.html' %}
-
-
 {% block body %}
+<br>
 <div class="row">
-    <div class="col-md-4">
-        <div class="input-group">
-            <input type="text" class="form-control" onkeydown="onKeyDown()">
-            <div class="input-group-btn">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    任务id <span
-                        class="caret"></span></button>
-                <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                    <li><a href="#">任务id</a></li>
-                    <li><a href="#">状态</a></li>
-                    <li><a href="#">执行机器</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
+    {% include 'action/search_log.html' ignore missing %}
+</div> <br>
 <hr>
-
 
 <table class="table table-hover table-striped" style="box-shadow: 10px 10px 5px #888888">
     <thead>

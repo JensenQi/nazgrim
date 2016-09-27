@@ -25,6 +25,7 @@ class Task(BaseModel):
                args=Column(Text, doc="任务执行参数"),
                priority=Column(SmallInteger, doc="任务优先级"),
                machine_pool=Column(Json, doc="机器池list"),
+               father_task = Column(Json, doc="父任务"),
                valid=Column(Boolean, index=True, doc="是否调度"),
                rerun=Column(Boolean, index=True, default=False, doc="当失败时是否自动重新执行"),
                rerun_times=Column(SmallInteger, default=0, doc="重新执行次数"),
@@ -49,6 +50,7 @@ class Task(BaseModel):
     args = Column(Text, doc="任务执行参数")
     priority = Column(SmallInteger, default=0, doc="任务优先级")
     machine_pool = Column(Json, doc="机器池list")
+    father_task = Column(Json, doc="父任务")
 
     # 调度相关
     valid = Column(Boolean, index=True, default=False, doc="是否调度")

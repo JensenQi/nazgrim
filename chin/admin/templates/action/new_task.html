@@ -12,134 +12,132 @@
             <div class="modal-header">
                 <h4 class="modal-title">新建任务</h4>
             </div>
-            <form name="new_task_form" method="post" action="/auth/login" role="form">
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-2">继承<input type="text" name="extend_id" class="form-control"></div>
-                        <div class="col-md-4">归属组<input type="text" name="group" class="form-control"></div>
-                        <div class="col-md-6">任务名<input type="text" name="task_name" class="form-control"></div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-2">继承<input type="text" id="extend_id" class="form-control"></div>
+                    <div class="col-md-4">归属组<input type="text" id="group" class="form-control"></div>
+                    <div class="col-md-6">任务名<input type="text" id="task_name" class="form-control"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-7">执行命令<input type="text" id="command" class="form-control"></div>
+                    <div class="col-md-5">启动参数<input type="text" id="args" class="form-control"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        是否启用
+                        <select class="form-control" id="valid">
+                            <option value="1">是</option>
+                            <option value="0">否</option>
+                        </select>
                     </div>
-                    <div class="row">
-                        <div class="col-md-7">执行命令<input type="text" name="command" class="form-control"></div>
-                        <div class="col-md-5">启动参数<input type="text" name="args" class="form-control"></div>
+                    <div class="col-md-3">
+                        优先级
+                        <select class="form-control" id="priority">
+                            <option value="1">1(最低)</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10(最高)</option>
+                        </select>
                     </div>
-                    <div class="row">
-                        <div class="col-md-3">
-                            是否启用
-                            <select class="form-control" name="valid">
-                                <option>是</option>
-                                <option>否</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            优先级
-                            <select class="form-control" name="priority">
-                                <option>1(最低)</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                                <option>6</option>
-                                <option>7</option>
-                                <option>8</option>
-                                <option>9</option>
-                                <option>10(最高)</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            失败重跑
-                            <select class="form-control" name="rerun">
-                                <option>否</option>
-                                <option>是</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            重跑次数
-                            <select class="form-control" name="rerun_times">
-                                <option>0</option>
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                                <option>6</option>
-                                <option>7</option>
-                                <option>8</option>
-                                <option>9</option>
-                                <option>10</option>
-                            </select>
-                        </div>
+                    <div class="col-md-3">
+                        失败重跑
+                        <select class="form-control" id="rerun">
+                            <option value="0">否</option>
+                            <option value="1">是</option>
+                        </select>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6"> 机器池<input type="text" name="machine_pool" class="form-control"></div>
-                        <div class="col-md-6"> 父任务<input type="text" name="father_task" class="form-control"></div>
+                    <div class="col-md-3">
+                        重跑次数
+                        <select class="form-control" id="rerun_times">
+                            <option>0</option>
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                            <option>6</option>
+                            <option>7</option>
+                            <option>8</option>
+                            <option>9</option>
+                            <option>10</option>
+                        </select>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            调度形式
-                            <div class="input-group">
-                                <div class="input-group-btn">
-                                    <ul class="dropdown-menu dropdown-menu-left" role="menu">
-                                        <li><a href="#" onclick="set_scheduled_type('每日')">每日</a></li>
-                                        <li><a href="#" onclick="set_scheduled_type('每周')">每周</a></li>
-                                        <li><a href="#" onclick="set_scheduled_type('每月')">每月</a></li>
-                                        <li><a href="#" onclick="set_scheduled_type('每年')">每年</a></li>
-                                        <li><a href="#" onclick="set_scheduled_type('一次')">一次</a></li>
-                                    </ul>
-                                    <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                        <span id="scheduled_type">每日</span><span class="caret"></span>
-                                    </button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6"> 机器池<input type="text" id="machine_pool" class="form-control"></div>
+                    <div class="col-md-6"> 父任务<input type="text" id="father_task" class="form-control"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        调度形式
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <ul class="dropdown-menu dropdown-menu-left" role="menu">
+                                    <li><a href="#" onclick="set_scheduled_type('每日')">每日</a></li>
+                                    <li><a href="#" onclick="set_scheduled_type('每周')">每周</a></li>
+                                    <li><a href="#" onclick="set_scheduled_type('每月')">每月</a></li>
+                                    <li><a href="#" onclick="set_scheduled_type('每年')">每年</a></li>
+                                    <li><a href="#" onclick="set_scheduled_type('一次')">一次</a></li>
+                                </ul>
+                                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    <span id="scheduled_type">每日</span><span class="caret"></span>
+                                </button>
+                            </div>
+                            <div id="scheduled_format">
+                                <div id="每日" class="input-group">
+                                    {% include 'time/hour.html' ignore missing %}
+                                    {% include 'time/minute.html' ignore missing %}
+                                    {% include 'time/second.html' ignore missing %}
                                 </div>
-                                <div id="scheduled_format">
-                                    <div id="scheduled_by_day" class="input-group">
-                                        {% include 'time/hour.html' ignore missing %}
-                                        {% include 'time/minute.html' ignore missing %}
-                                        {% include 'time/second.html' ignore missing %}
-                                    </div>
-                                    <div id="scheduled_by_week" style="display: none">
-                                        {% include 'time/weekday.html' ignore missing %}
-                                        {% include 'time/hour.html' ignore missing %}
-                                        {% include 'time/minute.html' ignore missing %}
-                                        {% include 'time/second.html' ignore missing %}
-                                    </div>
-
-                                    <div id="scheduled_by_month" style="display: none">
-                                        {% include 'time/day.html' ignore missing %}
-                                        {% include 'time/hour.html' ignore missing %}
-                                        {% include 'time/minute.html' ignore missing %}
-                                        {% include 'time/second.html' ignore missing %}
-                                    </div>
-
-
-                                    <div id="scheduled_by_year" style="display: none">
-                                        {% include 'time/month.html' ignore missing %}
-                                        {% include 'time/day.html' ignore missing %}
-                                        {% include 'time/hour.html' ignore missing %}
-                                        {% include 'time/minute.html' ignore missing %}
-                                        {% include 'time/second.html' ignore missing %}
-                                    </div>
-
-
-                                    <div id="scheduled_by_once" style="display: none">
-                                        {% include 'time/year.html' ignore missing %}
-                                        {% include 'time/month.html' ignore missing %}
-                                        {% include 'time/day.html' ignore missing %}
-                                        {% include 'time/hour.html' ignore missing %}
-                                        {% include 'time/minute.html' ignore missing %}
-                                        {% include 'time/second.html' ignore missing %}
-                                    </div>
-
+                                <div id="每周" style="display: none">
+                                    {% include 'time/weekday.html' ignore missing %}
+                                    {% include 'time/hour.html' ignore missing %}
+                                    {% include 'time/minute.html' ignore missing %}
+                                    {% include 'time/second.html' ignore missing %}
                                 </div>
+
+                                <div id="每月" style="display: none">
+                                    {% include 'time/day.html' ignore missing %}
+                                    {% include 'time/hour.html' ignore missing %}
+                                    {% include 'time/minute.html' ignore missing %}
+                                    {% include 'time/second.html' ignore missing %}
+                                </div>
+
+
+                                <div id="每年" style="display: none">
+                                    {% include 'time/month.html' ignore missing %}
+                                    {% include 'time/day.html' ignore missing %}
+                                    {% include 'time/hour.html' ignore missing %}
+                                    {% include 'time/minute.html' ignore missing %}
+                                    {% include 'time/second.html' ignore missing %}
+                                </div>
+
+
+                                <div id="一次" style="display: none">
+                                    {% include 'time/year.html' ignore missing %}
+                                    {% include 'time/month.html' ignore missing %}
+                                    {% include 'time/day.html' ignore missing %}
+                                    {% include 'time/hour.html' ignore missing %}
+                                    {% include 'time/minute.html' ignore missing %}
+                                    {% include 'time/second.html' ignore missing %}
+                                </div>
+
                             </div>
                         </div>
                     </div>
                 </div>
-                <input id="page_url" type="hidden" value="null" name="next">
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">提交</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
-                </div>
-            </form>
+            </div>
+            <input id="page_url" type="hidden" value="null" name="next">
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="submit_new_task()">提交</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
+            </div>
         </div>
     </div>
 </div>
@@ -150,16 +148,59 @@
         $('#scheduled_format').children().each(function () {
             $(this).hide()
         });
-        if (scheduled_type == '每周') {
-            $('#scheduled_by_week').show();
-        } else if (scheduled_type == '每日') {
-            $('#scheduled_by_day').show();
-        } else if (scheduled_type == '每月') {
-            $('#scheduled_by_month').show();
-        } else if (scheduled_type == '每年') {
-            $('#scheduled_by_year').show();
-        } else if (scheduled_type == '一次') {
-            $('#scheduled_by_once').show();
-        }
+        $('#' + scheduled_type).show();
+    }
+
+    function submit_new_task() {
+        var group  = $('#group').val();
+        var task_name = $('#task_name').val();
+        var command = $('#command').val();
+        var args = $('#args').val();
+        var valid = $('#valid').val();
+        var priority = $('#priority').val();
+        var rerun = $('#rerun').val();
+        var rerun_times = $('#rerun_times').val();
+        var machine_pool = $('#machine_pool').val();
+        var father_task = $('#father_task').val();
+
+        var scheduled_type = $('#scheduled_type').html();
+        var scheduled = $('#' + scheduled_type);
+        scheduled_type = {'每周':'week', '每日':'day', '每月':'month',
+            '每年':'year', '一次':'once'}[scheduled_type];
+        var year = scheduled.children('.scheduled_year').children().val();
+        var month = scheduled.children('.scheduled_month').children().val();
+        var weekday = scheduled.children('.scheduled_weekday').children().val();
+        var day = scheduled.children('.scheduled_day').children().val();
+        var hour = scheduled.children('.scheduled_hour').children().val();
+        var minute = scheduled.children('.scheduled_minute').children().val();
+        var second = scheduled.children('.scheduled_second').children().val();
+
+        var task_meta = {
+            'group': group,
+            'task_name': task_name,
+            'command': command,
+            'args': args,
+            'valid': valid,
+            'priority': priority,
+            'rerun': rerun,
+            'rerun_times': rerun_times,
+            'machine_pool': machine_pool,
+            'father_task': father_task,
+            'scheduled_type': scheduled_type,
+            'year': year,
+            'month': month,
+            'weekday': weekday,
+            'day': day,
+            'hour': hour,
+            'minute': minute,
+            'second': second
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/new_task',
+            data: task_meta,
+            success: location.reload(),
+            dataType: "json"
+        });
     }
 </script>

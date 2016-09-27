@@ -9,40 +9,32 @@
 <div class="modal fade" id="new_task" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document" align="center">
         <div class="modal-content" style="width: 100%" align="left">
-            <div class="modal-header"><h4 class="modal-title">新建任务</h4></div>
-            <form name="login_form" method="post" action="/auth/login" role="form">
+            <div class="modal-header">
+                <h4 class="modal-title">新建任务</h4>
+            </div>
+            <form name="new_task_form" method="post" action="/auth/login" role="form">
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-2">
-                            继承<input type="text" name="extend_id" class="form-control">
-                        </div>
-                        <div class="col-md-4">
-                            归属组<input type="text" name="extend_id" class="form-control">
-                        </div>
-                        <div class="col-md-6">
-                            任务名<input type="text" name="user_name" class="form-control">
-                        </div>
+                        <div class="col-md-2">继承<input type="text" name="extend_id" class="form-control"></div>
+                        <div class="col-md-4">归属组<input type="text" name="group" class="form-control"></div>
+                        <div class="col-md-6">任务名<input type="text" name="task_name" class="form-control"></div>
                     </div>
                     <div class="row">
-                        <div class="col-md-7">
-                            执行命令<input type="text" name="password" class="form-control">
-                        </div>
-                        <div class="col-md-5">
-                            命令参数<input type="text" name="password" class="form-control">
-                        </div>
+                        <div class="col-md-7">执行命令<input type="text" name="command" class="form-control"></div>
+                        <div class="col-md-5">启动参数<input type="text" name="args" class="form-control"></div>
                     </div>
                     <div class="row">
                         <div class="col-md-3">
                             是否启用
-                            <select class="form-control">
+                            <select class="form-control" name="valid">
                                 <option>是</option>
                                 <option>否</option>
                             </select>
                         </div>
                         <div class="col-md-3">
                             优先级
-                            <select class="form-control">
-                                <option>1</option>
+                            <select class="form-control" name="priority">
+                                <option>1(最低)</option>
                                 <option>2</option>
                                 <option>3</option>
                                 <option>4</option>
@@ -51,19 +43,19 @@
                                 <option>7</option>
                                 <option>8</option>
                                 <option>9</option>
-                                <option>10</option>
+                                <option>10(最高)</option>
                             </select>
                         </div>
                         <div class="col-md-3">
                             失败重跑
-                            <select class="form-control">
+                            <select class="form-control" name="rerun">
                                 <option>否</option>
                                 <option>是</option>
                             </select>
                         </div>
                         <div class="col-md-3">
                             重跑次数
-                            <select class="form-control">
+                            <select class="form-control" name="rerun_times">
                                 <option>0</option>
                                 <option>1</option>
                                 <option>2</option>
@@ -79,12 +71,8 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
-                            机器池<input type="text" name="password" class="form-control">
-                        </div>
-                        <div class="col-md-6">
-                            父任务<input type="text" name="password" class="form-control">
-                        </div>
+                        <div class="col-md-6"> 机器池<input type="text" name="machine_pool" class="form-control"></div>
+                        <div class="col-md-6"> 父任务<input type="text" name="father_task" class="form-control"></div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
@@ -92,18 +80,56 @@
                             <div class="input-group">
                                 <div class="input-group-btn">
                                     <ul class="dropdown-menu dropdown-menu-left" role="menu">
-                                        <li><a href="#">每日</a></li>
-                                        <li><a href="#">每周</a></li>
-                                        <li><a href="#">每月</a></li>
-                                        <li><a href="#">每年</a></li>
-                                        <li><a href="#">一次</a></li>
+                                        <li><a href="#" onclick="set_scheduled_type('每日')">每日</a></li>
+                                        <li><a href="#" onclick="set_scheduled_type('每周')">每周</a></li>
+                                        <li><a href="#" onclick="set_scheduled_type('每月')">每月</a></li>
+                                        <li><a href="#" onclick="set_scheduled_type('每年')">每年</a></li>
+                                        <li><a href="#" onclick="set_scheduled_type('一次')">一次</a></li>
                                     </ul>
-                                    <button type="button" class="btn btn-default dropdown-toggle"
-                                            data-toggle="dropdown">
-                                        每日<span
-                                            class="caret"></span></button>
+                                    <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                        <span id="scheduled_type">每日</span><span class="caret"></span>
+                                    </button>
                                 </div>
-                                <input type="text" class="form-control" onkeydown="onKeyDown()">
+                                <div id="scheduled_format">
+                                    <div id="scheduled_by_day" class="input-group">
+                                        {% include 'time/hour.html' ignore missing %}
+                                        {% include 'time/minute.html' ignore missing %}
+                                        {% include 'time/second.html' ignore missing %}
+                                    </div>
+                                    <div id="scheduled_by_week" style="display: none">
+                                        {% include 'time/weekday.html' ignore missing %}
+                                        {% include 'time/hour.html' ignore missing %}
+                                        {% include 'time/minute.html' ignore missing %}
+                                        {% include 'time/second.html' ignore missing %}
+                                    </div>
+
+                                    <div id="scheduled_by_month" style="display: none">
+                                        {% include 'time/day.html' ignore missing %}
+                                        {% include 'time/hour.html' ignore missing %}
+                                        {% include 'time/minute.html' ignore missing %}
+                                        {% include 'time/second.html' ignore missing %}
+                                    </div>
+
+
+                                    <div id="scheduled_by_year" style="display: none">
+                                        {% include 'time/month.html' ignore missing %}
+                                        {% include 'time/day.html' ignore missing %}
+                                        {% include 'time/hour.html' ignore missing %}
+                                        {% include 'time/minute.html' ignore missing %}
+                                        {% include 'time/second.html' ignore missing %}
+                                    </div>
+
+
+                                    <div id="scheduled_by_once" style="display: none">
+                                        {% include 'time/year.html' ignore missing %}
+                                        {% include 'time/month.html' ignore missing %}
+                                        {% include 'time/day.html' ignore missing %}
+                                        {% include 'time/hour.html' ignore missing %}
+                                        {% include 'time/minute.html' ignore missing %}
+                                        {% include 'time/second.html' ignore missing %}
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -117,3 +143,23 @@
         </div>
     </div>
 </div>
+
+<script>
+    function set_scheduled_type(scheduled_type) {
+        $('#scheduled_type').html(scheduled_type);
+        $('#scheduled_format').children().each(function () {
+            $(this).hide()
+        });
+        if (scheduled_type == '每周') {
+            $('#scheduled_by_week').show();
+        } else if (scheduled_type == '每日') {
+            $('#scheduled_by_day').show();
+        } else if (scheduled_type == '每月') {
+            $('#scheduled_by_month').show();
+        } else if (scheduled_type == '每年') {
+            $('#scheduled_by_year').show();
+        } else if (scheduled_type == '一次') {
+            $('#scheduled_by_once').show();
+        }
+    }
+</script>

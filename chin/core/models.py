@@ -18,6 +18,7 @@ class Json(TypeDecorator):
 
 class Task(BaseModel):
     def fields(self, id=Column(Integer, primary_key=True, doc="任务id"),
+               name = Column(Text, doc="任务名"),
                user=Column(String(32), doc="任务创建者"),
                group=Column(String(32), doc="任务所属组"),
                create_time=Column(DateTime, doc="任务创建时间"),
@@ -41,6 +42,7 @@ class Task(BaseModel):
     # 基础
     __tablename__ = 'task'
     id = Column(Integer, primary_key=True, doc="任务id")
+    name = Column(Text, doc="任务名")
     user = Column(String(32), doc="任务创建者")
     group = Column(String(32), doc="任务所属组")
     create_time = Column(DateTime, doc="任务创建时间")

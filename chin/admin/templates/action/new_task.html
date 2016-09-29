@@ -195,12 +195,8 @@
             'minute': minute,
             'second': second
         };
-        $.ajax({
-            type: 'POST',
-            url: '/new_task',
-            data: task_meta,
-            success: location.reload(),
-            dataType: "json"
+        $.post('/new_task', task_meta, function(result){
+            location.reload();
         });
     }
 </script>

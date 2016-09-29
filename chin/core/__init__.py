@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from models import BaseModel
 import time
 
-engine = create_engine(DATABASE_URI)
+engine = create_engine(DATABASE_URI, encoding='utf-8')
 DBSession = sessionmaker(engine)
 
 from master.Master import Master

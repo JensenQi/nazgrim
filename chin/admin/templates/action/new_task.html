@@ -1,11 +1,7 @@
 <div class="col-md-1">
     <a data-toggle="modal" data-target="#new_task" class="btn btn-info">新建</a>
 </div>
-<style>
-    .row {
-        margin-bottom: 0.7em;
-    }
-</style>
+
 <div class="modal fade" id="new_task" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document" align="center">
         <div class="modal-content" style="width: 100%" align="left">
@@ -22,6 +18,10 @@
                     <div class="col-md-7">执行命令<input type="text" id="command" class="form-control"></div>
                     <div class="col-md-5">启动参数<input type="text" id="args" class="form-control"></div>
                 </div>
+
+                <input type="text" id="car" class="typeahead tt-query" autocomplete="off" spellcheck="false">
+                <input type="text" id="cat" class="typeahead tt-query" autocomplete="off" spellcheck="false">
+
                 <div class="row">
                     <div class="col-md-3">
                         是否启用
@@ -70,8 +70,17 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6"> 机器池<input type="text" id="machine_pool" class="form-control"></div>
-                    <div class="col-md-6"> 父任务<input type="text" id="father_task" class="form-control"></div>
+                    <div class="col-md-6"> 机器池
+                        <div contenteditable="true" id="machine_pool" class="form-control"
+                             style="height:100px; overflow: auto">
+                        </div>
+                    </div>
+                    <div class="col-md-6"> 父任务
+                        <div contenteditable="true" id="father_task" class="form-control"
+                             style="height: 100px; overflow: auto">
+                            editable
+                        </div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
@@ -142,7 +151,29 @@
     </div>
 </div>
 
+
 <script>
+
+    $(document).ready(function () {
+
+        var cars = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace, queryTokenizer: Bloodhound.tokenizers.whitespace,
+            local: ['北京', 'BMW', 'Bugatti', 'Ferrari', 'Ford', 'Lamborghini', 'Mercedes Benz', 'Porsche', 'Rolls-Royce', 'Volkswagen']
+        });
+
+        $('#car').typeahead({hint: true, highlight: true, minLength: 1}, {name: 'cars', source: cars});
+
+        var cat = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace, queryTokenizer: Bloodhound.tokenizers.whitespace,
+            local: ['北京', '上海', '广东', '广西']
+        });
+
+        $('#cat').typeahead({hint: true, highlight: true, minLength: 1}, {name: 'cat', source: cat});
+
+
+    });
+
+
     function set_scheduled_type(scheduled_type) {
         $('#scheduled_type').html(scheduled_type);
         $('#scheduled_format').children().each(function () {
@@ -152,7 +183,7 @@
     }
 
     function submit_new_task() {
-        var group  = $('#group').val();
+        var group = $('#group').val();
         var task_name = $('#task_name').val();
         var command = $('#command').val();
         var args = $('#args').val();
@@ -165,8 +196,10 @@
 
         var scheduled_type = $('#scheduled_type').html();
         var scheduled = $('#' + scheduled_type);
-        scheduled_type = {'每周':'week', '每日':'day', '每月':'month',
-            '每年':'year', '一次':'once'}[scheduled_type];
+        scheduled_type = {
+            '每周': 'week', '每日': 'day', '每月': 'month',
+            '每年': 'year', '一次': 'once'
+        }[scheduled_type];
         var year = scheduled.children('.scheduled_year').children().val();
         var month = scheduled.children('.scheduled_month').children().val();
         var weekday = scheduled.children('.scheduled_weekday').children().val();
@@ -195,8 +228,68 @@
             'minute': minute,
             'second': second
         };
-        $.post('/new_task', task_meta, function(result){
+        $.post('/new_task', task_meta, function (result) {
             location.reload();
         });
     }
 </script>
+
+<style type="text/css">
+    .bs-example {
+        font-family: sans-serif;
+        position: relative;
+        margin: 100px;
+    }
+
+    .typeahead, .tt-query, .tt-hint {
+        border: 2px solid #CCCCCC;
+        border-radius: 8px;
+        font-size: 22px; /* Set input font size */
+        height: 30px;
+        line-height: 30px;
+        outline: medium none;
+        padding: 8px 12px;
+        width: 396px;
+    }
+
+    .typeahead {
+        background-color: #FFFFFF;
+    }
+
+    .typeahead:focus {
+        border: 2px solid #0097CF;
+    }
+
+    .tt-query {
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    }
+
+    .tt-hint {
+        color: #999999;
+    }
+
+    .tt-menu {
+        background-color: #FFFFFF;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        margin-top: 12px;
+        padding: 8px 0;
+        width: 422px;
+    }
+
+    .tt-suggestion {
+        font-size: medium; /* Set suggestion dropdown font size */
+        padding: 3px 20px;
+    }
+
+    .tt-suggestion:hover {
+        cursor: pointer;
+        background-color: #0097CF;
+        color: #FFFFFF;
+    }
+
+    .tt-suggestion p {
+        margin: 0;
+    }
+</style>

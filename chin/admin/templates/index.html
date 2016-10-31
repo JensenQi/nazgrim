@@ -20,6 +20,20 @@
     </tr>
     </thead>
     <tbody>
+    {% for task in tasks %}
+    <tr>
+        <td>{{ task.id }}</td>
+        <td title="{{ task.command }}">{{ task.name }}</td>
+        <td>{{ task.machine_pool }}</td>
+        <td title="{{ task.scheduled_type }}">{{ task.hour }}</td>
+        <td>{{ task.father_task }}</td>
+        <td>child</td>
+        <td>
+            <a class="btn btn-danger btn-xs">删除</a>
+            <a class="btn btn-success btn-xs">编辑</a>
+        </td>
+    </tr>
+    {% endfor %}
     <tr>
         <td>10</td>
         <td title="python jd_source.py">京东日常数据抽取[source]</td>

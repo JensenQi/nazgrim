@@ -9,7 +9,9 @@ from datetime import datetime
 
 @admin.route('/')
 def home():
-    return render_template('index.html')
+    session = DBSession()
+    tasks = session.query(Task).order_by(Task.id.desc()).all()
+    return render_template('index.html', tasks=tasks)
 
 
 @admin.route('/new_task', methods=['POST'])

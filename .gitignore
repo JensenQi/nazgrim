@@ -1,4 +1,4 @@
 .idea
 *.pyc
 nazgrim/log/
-.ini
+*.ini

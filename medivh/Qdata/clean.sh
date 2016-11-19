@@ -1,9 +1,0 @@
-rm *.aux
-rm *.log
-rm *.dvi
-rm *.toc
-rm *.synctex.gz
-rm body/*.aux
-rm body/*.log
-rm setup/*.aux
-rm setup/*.log

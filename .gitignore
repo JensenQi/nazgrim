@@ -1,14 +1,4 @@
 .idea
 *.pyc
-
-
-nazgrim/config/app.ini
-nazgrim/config/uwsgi.ini
 nazgrim/log/
-
-chin/config/app.ini
-chin/config/uwsgi.ini
-chin/logs/
-
-nginx.conf
-supervisor.conf
+nazgrim.ini
